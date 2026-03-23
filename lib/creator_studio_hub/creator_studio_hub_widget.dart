@@ -133,8 +133,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 child: custom_widgets.LocalVideoPreview(
                                   width: double.infinity,
                                   height: 300.0,
-                                  videoFile:
-                                      _model.uploadedLocalFile_uploadData9d5,
+                                  videoFile: _model.finalVideoToStream,
                                 ),
                               ),
                             Padding(
@@ -515,7 +514,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                           ?.isNotEmpty ??
                                       false)) {
                                 await actions.startFFmpegStream(
-                                  _model.uploadedLocalFile_uploadData9d5,
+                                  _model.finalVideoToStream!,
                                   FFAppState().rtmpUrl,
                                   FFAppState().streamKey,
                                 );
