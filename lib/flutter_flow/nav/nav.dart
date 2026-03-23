@@ -33,12 +33,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       navigatorKey: appNavigatorKey,
-      errorBuilder: (context, state) => StreamConfigurationWidget(),
+      errorBuilder: (context, state) => LoginScreenWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => StreamConfigurationWidget(),
+          builder: (context, _) => LoginScreenWidget(),
         ),
         FFRoute(
           name: StreamConfigurationWidget.routeName,
@@ -54,6 +54,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: LiveBroadcastModeWidget.routeName,
           path: LiveBroadcastModeWidget.routePath,
           builder: (context, params) => LiveBroadcastModeWidget(),
+        ),
+        FFRoute(
+          name: LoginScreenWidget.routeName,
+          path: LoginScreenWidget.routePath,
+          builder: (context, params) => LoginScreenWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

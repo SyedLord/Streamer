@@ -44,6 +44,18 @@ class FFAppState extends ChangeNotifier {
     _streamKey = value;
     prefs.setString('ff_streamKey', value);
   }
+
+  String _globalRtmp = '';
+  String get globalRtmp => _globalRtmp;
+  set globalRtmp(String value) {
+    _globalRtmp = value;
+  }
+
+  String _globalStreamKey = '';
+  String get globalStreamKey => _globalStreamKey;
+  set globalStreamKey(String value) {
+    _globalStreamKey = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

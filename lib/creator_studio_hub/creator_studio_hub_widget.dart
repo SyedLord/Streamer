@@ -112,10 +112,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                               color: FlutterFlowTheme.of(context).secondaryText,
                               size: 28.0,
                             ),
-                            onPressed: () async {
-                              context.pushNamed(
-                                  StreamConfigurationWidget.routeName);
-                            },
+                            onPressed: () async {},
                           ),
                         ],
                       ),
@@ -520,8 +517,8 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       false)) {
                                 await actions.startFFmpegStream(
                                   _model.finalVideoToStream!,
-                                  FFAppState().rtmpUrl,
-                                  FFAppState().streamKey,
+                                  FFAppState().globalRtmp,
+                                  FFAppState().globalStreamKey,
                                 );
 
                                 context.pushNamed(
