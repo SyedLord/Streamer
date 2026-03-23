@@ -270,10 +270,11 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                           text: 'Continue with Google',
                           icon: FaIcon(
                             FontAwesomeIcons.google,
-                            size: 15.0,
+                            size: 24.0,
                           ),
                           options: FFButtonOptions(
-                            height: 40.0,
+                            width: double.infinity,
+                            height: 64.0,
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 0.0, 16.0, 0.0),
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
@@ -290,7 +291,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                         .titleSmall
                                         .fontStyle,
                                   ),
-                                  color: Colors.white,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
                                       .titleSmall

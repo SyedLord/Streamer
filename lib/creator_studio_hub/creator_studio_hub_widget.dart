@@ -511,106 +511,73 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              if ((_model.uploadedLocalFile_uploadData9d5.bytes
-                                          ?.isNotEmpty ??
-                                      false)) {
-                                await actions.startFFmpegStream(
-                                  _model.finalVideoToStream!,
-                                  FFAppState().globalRtmp,
-                                  FFAppState().globalStreamKey,
-                                );
+                        FFButtonWidget(
+                          onPressed: () async {
+                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
+                                        ?.isNotEmpty ??
+                                    false)) {
+                              await actions.startFFmpegStream(
+                                _model.finalVideoToStream!,
+                                FFAppState().globalRtmp,
+                                FFAppState().globalStreamKey,
+                              );
 
-                                context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Select the Video !',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
+                              context
+                                  .pushNamed(LiveBroadcastModeWidget.routeName);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Select the Video !',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
                                     ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).error,
                                   ),
-                                );
-                              }
-                            },
-                            child: Container(
-                              height: 64.0,
-                              decoration: BoxDecoration(
-                                color: FlutterFlowTheme.of(context).primary,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4.0,
-                                    color: Color(0x1A000000),
-                                    offset: Offset(
-                                      0.0,
-                                      2.0,
-                                    ),
-                                    spreadRadius: 0.0,
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(9999.0),
-                              ),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      32.0, 0.0, 32.0, 0.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.sensors_rounded,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        size: 24.0,
-                                      ),
-                                      Text(
-                                        'START LIVE STREAM',
-                                        style: FlutterFlowTheme.of(context)
-                                            .labelLarge
-                                            .override(
-                                              font: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelLarge
-                                                        .fontStyle,
-                                              ),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w600,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelLarge
-                                                      .fontStyle,
-                                              lineHeight: 1.3,
-                                            ),
-                                      ),
-                                    ].divide(SizedBox(width: 16.0)),
-                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).error,
                                 ),
-                              ),
-                            ),
+                              );
+                            }
+                          },
+                          text: 'START LIVE STREAM',
+                          icon: Icon(
+                            Icons.sensors_sharp,
+                            size: 24.0,
+                          ),
+                          options: FFButtonOptions(
+                            width: double.infinity,
+                            height: 64.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                16.0, 0.0, 16.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            iconColor: FlutterFlowTheme.of(context).primaryText,
+                            color: FlutterFlowTheme.of(context).primary,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
+                                ),
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(16.0),
                           ),
                         ),
                       ],
