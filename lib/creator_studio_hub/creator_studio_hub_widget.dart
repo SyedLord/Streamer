@@ -124,16 +124,19 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Container(
-                              width: double.infinity,
-                              height: 300.0,
-                              child: custom_widgets.LocalVideoPreview(
+                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
+                                        ?.isNotEmpty ??
+                                    false))
+                              Container(
                                 width: double.infinity,
                                 height: 300.0,
-                                videoFile:
-                                    _model.uploadedLocalFile_uploadData9d5,
+                                child: custom_widgets.LocalVideoPreview(
+                                  width: double.infinity,
+                                  height: 300.0,
+                                  videoFile:
+                                      _model.uploadedLocalFile_uploadData9d5,
+                                ),
                               ),
-                            ),
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: FFButtonWidget(
