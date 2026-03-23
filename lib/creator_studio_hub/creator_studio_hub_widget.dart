@@ -73,7 +73,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                FFAppState().channelName,
+                                'Creator Studio',
                                 style: FlutterFlowTheme.of(context)
                                     .titleLarge
                                     .override(

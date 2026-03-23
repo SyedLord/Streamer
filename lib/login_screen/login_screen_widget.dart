@@ -249,10 +249,13 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 (_model.apiResult?.jsonBody ?? ''),
                               ).toString();
                               FFAppState().isLoggedIn = true;
-                              FFAppState().channelName =
-                                  GetYouTubeChannelInfoCall.channelTitle(
-                                (_model.channelApiResult?.jsonBody ?? ''),
-                              ).toString();
+                              FFAppState().channelName = valueOrDefault<String>(
+                                getJsonField(
+                                  (_model.channelApiResult?.jsonBody ?? ''),
+                                  r'''$.items[0].snippet.title''',
+                                )?.toString(),
+                                'Default',
+                              );
                               safeSetState(() {});
 
                               context.goNamed(CreatorStudioHubWidget.routeName);
