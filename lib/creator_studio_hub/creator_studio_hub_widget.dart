@@ -113,7 +113,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                               size: 28.0,
                             ),
                             onPressed: () async {
-                              await actions.googleLogout();
                               FFAppState().globalRtmp = '';
                               FFAppState().globalStreamKey = '';
                               safeSetState(() {});
