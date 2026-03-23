@@ -240,6 +240,20 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 accessToken: _model.myToken,
                               );
 
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    (_model.channelApiResult?.bodyText ?? ''),
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
                               FFAppState().globalRtmp =
                                   GetYouTubeStreamDataCall.rtmpUrl(
                                 (_model.apiResult?.jsonBody ?? ''),
@@ -250,10 +264,9 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               ).toString();
                               FFAppState().isLoggedIn = true;
                               FFAppState().channelName = valueOrDefault<String>(
-                                getJsonField(
+                                GetYouTubeChannelInfoCall.channelTitle(
                                   (_model.channelApiResult?.jsonBody ?? ''),
-                                  r'''$.items[0].snippet.title''',
-                                )?.toString(),
+                                ).toString(),
                                 'Default',
                               );
                               safeSetState(() {});
