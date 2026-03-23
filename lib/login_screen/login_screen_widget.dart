@@ -50,12 +50,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
             padding: EdgeInsets.all(32.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  height: 60.0,
-                ),
+                Spacer(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -138,9 +136,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                     ),
                   ].divide(SizedBox(height: 16.0)),
                 ),
-                Container(
-                  height: 24.0,
-                ),
+                Spacer(),
                 Container(
                   decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).secondaryBackground,

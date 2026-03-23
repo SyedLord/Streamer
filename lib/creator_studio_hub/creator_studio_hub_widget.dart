@@ -108,11 +108,18 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                           FlutterFlowIconButton(
                             buttonSize: 44.0,
                             icon: Icon(
-                              Icons.settings_outlined,
+                              Icons.logout,
                               color: FlutterFlowTheme.of(context).secondaryText,
                               size: 28.0,
                             ),
-                            onPressed: () async {},
+                            onPressed: () async {
+                              await actions.googleLogout();
+                              FFAppState().globalRtmp = '';
+                              FFAppState().globalStreamKey = '';
+                              safeSetState(() {});
+
+                              context.goNamed(LoginScreenWidget.routeName);
+                            },
                           ),
                         ],
                       ),
