@@ -235,6 +235,11 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                             );
 
                             if ((_model.apiResult?.succeeded ?? true)) {
+                              _model.channelApiResult =
+                                  await GetYouTubeChannelInfoCall.call(
+                                accessToken: _model.myToken,
+                              );
+
                               FFAppState().globalRtmp =
                                   GetYouTubeStreamDataCall.rtmpUrl(
                                 (_model.apiResult?.jsonBody ?? ''),
@@ -244,6 +249,10 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 (_model.apiResult?.jsonBody ?? ''),
                               ).toString();
                               FFAppState().isLoggedIn = true;
+                              FFAppState().channelName =
+                                  GetYouTubeChannelInfoCall.channelTitle(
+                                (_model.channelApiResult?.jsonBody ?? ''),
+                              ).toString();
                               safeSetState(() {});
 
                               context.goNamed(CreatorStudioHubWidget.routeName);

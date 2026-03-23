@@ -2,6 +2,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'status_badge_model.dart';
 export 'status_badge_model.dart';
 
@@ -43,6 +44,8 @@ class _StatusBadgeWidgetState extends State<StatusBadgeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF1A1A24),
@@ -71,10 +74,7 @@ class _StatusBadgeWidgetState extends State<StatusBadgeWidget> {
               ),
             ),
             Text(
-              valueOrDefault<String>(
-                widget.label,
-                'RTMP: Configured',
-              ),
+              FFAppState().channelName,
               style: FlutterFlowTheme.of(context).labelMedium.override(
                     font: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,

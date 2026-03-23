@@ -11,6 +11,8 @@ class LoginScreenModel extends FlutterFlowModel<LoginScreenWidget> {
   String? myToken;
   // Stores action output result for [Backend Call - API (Get YouTube Stream Data)] action in Button widget.
   ApiCallResponse? apiResult;
+  // Stores action output result for [Backend Call - API (Get YouTube Channel Info)] action in Button widget.
+  ApiCallResponse? channelApiResult;
 
   @override
   void initState(BuildContext context) {}

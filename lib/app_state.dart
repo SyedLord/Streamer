@@ -32,6 +32,9 @@ class FFAppState extends ChangeNotifier {
     _safeInit(() {
       _isLoggedIn = prefs.getBool('ff_isLoggedIn') ?? _isLoggedIn;
     });
+    _safeInit(() {
+      _channelName = prefs.getString('ff_channelName') ?? _channelName;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -74,6 +77,13 @@ class FFAppState extends ChangeNotifier {
   set isLoggedIn(bool value) {
     _isLoggedIn = value;
     prefs.setBool('ff_isLoggedIn', value);
+  }
+
+  String _channelName = '';
+  String get channelName => _channelName;
+  set channelName(String value) {
+    _channelName = value;
+    prefs.setString('ff_channelName', value);
   }
 }
 

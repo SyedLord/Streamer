@@ -43,6 +43,37 @@ class GetYouTubeStreamDataCall {
       );
 }
 
+class GetYouTubeChannelInfoCall {
+  static Future<ApiCallResponse> call({
+    String? accessToken = '',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Get YouTube Channel Info',
+      apiUrl: 'https://youtube.googleapis.com/youtube/v3/channels',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization': 'Bearer ${accessToken}',
+        'Accept': 'application/json',
+      },
+      params: {
+        'port': "snippet",
+        'mine': true,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static dynamic channelTitle(dynamic response) => getJsonField(
+        response,
+        r'''$.items[0].snippet.title''',
+      );
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;
