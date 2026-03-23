@@ -217,8 +217,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.myToken =
-                                await actions.googleLoginAndGetToken();
+                            _model.myToken = await actions.webGoogleLogin();
                             _model.apiResult =
                                 await GetYouTubeStreamDataCall.call(
                               accessToken: _model.myToken,

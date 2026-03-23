@@ -59,6 +59,7 @@ android {
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [appAuthRedirectScheme: "com.syedlord.streamer"]
     }
 
    signingConfigs {
