@@ -49,16 +49,14 @@ class GetYouTubeChannelInfoCall {
   }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'Get YouTube Channel Info',
-      apiUrl: 'https://youtube.googleapis.com/youtube/v3/channels',
+      apiUrl:
+          'https://youtube.googleapis.com/youtube/v3/channels?part=snippet&mine=true',
       callType: ApiCallType.GET,
       headers: {
         'Authorization': 'Bearer ${accessToken}',
         'Accept': 'application/json',
       },
-      params: {
-        'port': "snippet",
-        'mine': true,
-      },
+      params: {},
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
