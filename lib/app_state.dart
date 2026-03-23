@@ -35,6 +35,10 @@ class FFAppState extends ChangeNotifier {
     _safeInit(() {
       _channelName = prefs.getString('ff_channelName') ?? _channelName;
     });
+    _safeInit(() {
+      _selectedVideoPath =
+          prefs.getString('ff_selectedVideoPath') ?? _selectedVideoPath;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -84,6 +88,13 @@ class FFAppState extends ChangeNotifier {
   set channelName(String value) {
     _channelName = value;
     prefs.setString('ff_channelName', value);
+  }
+
+  String _selectedVideoPath = '';
+  String get selectedVideoPath => _selectedVideoPath;
+  set selectedVideoPath(String value) {
+    _selectedVideoPath = value;
+    prefs.setString('ff_selectedVideoPath', value);
   }
 }
 

@@ -3,7 +3,6 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/upload_data.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
@@ -128,72 +127,27 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
-                                        ?.isNotEmpty ??
-                                    false))
+                            if (FFAppState().selectedVideoPath != '')
                               Container(
                                 width: double.infinity,
                                 height: 300.0,
-                                child: custom_widgets.LocalVideoPreview(
+                                child: custom_widgets.LocalVideoPlayer(
                                   width: double.infinity,
                                   height: 300.0,
-                                  videoFile: _model.finalVideoToStream!,
+                                  videoPath: FFAppState().selectedVideoPath,
                                 ),
                               ),
-                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
-                                        ?.isNotEmpty ??
-                                    false))
+                            if (FFAppState().selectedVideoPath != '')
                               Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    final selectedMedia =
-                                        await selectMediaWithSourceBottomSheet(
-                                      context: context,
-                                      allowPhoto: false,
-                                      allowVideo: true,
-                                    );
-                                    if (selectedMedia != null &&
-                                        selectedMedia.every((m) =>
-                                            validateFileFormat(
-                                                m.storagePath, context))) {
-                                      safeSetState(() => _model
-                                          .isDataUploading_changedVideo = true);
-                                      var selectedUploadedFiles =
-                                          <FFUploadedFile>[];
+                                    _model.changedVideo =
+                                        await actions.pickVideoFilePath();
+                                    FFAppState().selectedVideoPath =
+                                        _model.changedVideo!;
+                                    safeSetState(() {});
 
-                                      try {
-                                        selectedUploadedFiles = selectedMedia
-                                            .map((m) => FFUploadedFile(
-                                                  name: m.storagePath
-                                                      .split('/')
-                                                      .last,
-                                                  bytes: m.bytes,
-                                                  height: m.dimensions?.height,
-                                                  width: m.dimensions?.width,
-                                                  blurHash: m.blurHash,
-                                                  originalFilename:
-                                                      m.originalFilename,
-                                                ))
-                                            .toList();
-                                      } finally {
-                                        _model.isDataUploading_changedVideo =
-                                            false;
-                                      }
-                                      if (selectedUploadedFiles.length ==
-                                          selectedMedia.length) {
-                                        safeSetState(() {
-                                          _model.uploadedLocalFile_changedVideo =
-                                              selectedUploadedFiles.first;
-                                        });
-                                      } else {
-                                        safeSetState(() {});
-                                        return;
-                                      }
-                                    }
-
-                                    _model.finalVideoToStream =
-                                        _model.uploadedLocalFile_changedVideo;
                                     safeSetState(() {});
                                   },
                                   text: 'Change Video',
@@ -233,62 +187,19 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   ),
                                 ),
                               ),
-                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
-                                        ?.isEmpty ??
-                                    true))
+                            if (FFAppState().selectedVideoPath == '')
                               InkWell(
                                 splashColor: Colors.transparent,
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
-                                  final selectedMedia =
-                                      await selectMediaWithSourceBottomSheet(
-                                    context: context,
-                                    allowPhoto: false,
-                                    allowVideo: true,
-                                  );
-                                  if (selectedMedia != null &&
-                                      selectedMedia.every((m) =>
-                                          validateFileFormat(
-                                              m.storagePath, context))) {
-                                    safeSetState(() => _model
-                                        .isDataUploading_uploadData9d5 = true);
-                                    var selectedUploadedFiles =
-                                        <FFUploadedFile>[];
+                                  _model.videoPathResult =
+                                      await actions.pickVideoFilePath();
+                                  FFAppState().selectedVideoPath =
+                                      _model.videoPathResult!;
+                                  safeSetState(() {});
 
-                                    try {
-                                      selectedUploadedFiles = selectedMedia
-                                          .map((m) => FFUploadedFile(
-                                                name: m.storagePath
-                                                    .split('/')
-                                                    .last,
-                                                bytes: m.bytes,
-                                                height: m.dimensions?.height,
-                                                width: m.dimensions?.width,
-                                                blurHash: m.blurHash,
-                                                originalFilename:
-                                                    m.originalFilename,
-                                              ))
-                                          .toList();
-                                    } finally {
-                                      _model.isDataUploading_uploadData9d5 =
-                                          false;
-                                    }
-                                    if (selectedUploadedFiles.length ==
-                                        selectedMedia.length) {
-                                      safeSetState(() {
-                                        _model.uploadedLocalFile_uploadData9d5 =
-                                            selectedUploadedFiles.first;
-                                      });
-                                    } else {
-                                      safeSetState(() {});
-                                      return;
-                                    }
-                                  }
-
-                                  _model.finalVideoToStream =
-                                      _model.uploadedLocalFile_uploadData9d5;
                                   safeSetState(() {});
                                 },
                                 child: Container(
@@ -513,9 +424,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            if ((_model.uploadedLocalFile_uploadData9d5.bytes
-                                        ?.isNotEmpty ??
-                                    false)) {
+                            if (FFAppState().selectedVideoPath != '') {
                               await actions.startFFmpegStream(
                                 _model.finalVideoToStream!,
                                 FFAppState().globalRtmp,
