@@ -22,6 +22,16 @@ class FFAppState extends ChangeNotifier {
     _safeInit(() {
       _streamKey = prefs.getString('ff_streamKey') ?? _streamKey;
     });
+    _safeInit(() {
+      _globalRtmp = prefs.getString('ff_globalRtmp') ?? _globalRtmp;
+    });
+    _safeInit(() {
+      _globalStreamKey =
+          prefs.getString('ff_globalStreamKey') ?? _globalStreamKey;
+    });
+    _safeInit(() {
+      _isLoggedIn = prefs.getBool('ff_isLoggedIn') ?? _isLoggedIn;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -49,12 +59,21 @@ class FFAppState extends ChangeNotifier {
   String get globalRtmp => _globalRtmp;
   set globalRtmp(String value) {
     _globalRtmp = value;
+    prefs.setString('ff_globalRtmp', value);
   }
 
   String _globalStreamKey = '';
   String get globalStreamKey => _globalStreamKey;
   set globalStreamKey(String value) {
     _globalStreamKey = value;
+    prefs.setString('ff_globalStreamKey', value);
+  }
+
+  bool _isLoggedIn = false;
+  bool get isLoggedIn => _isLoggedIn;
+  set isLoggedIn(bool value) {
+    _isLoggedIn = value;
+    prefs.setBool('ff_isLoggedIn', value);
   }
 }
 

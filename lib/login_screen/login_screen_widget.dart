@@ -5,8 +5,10 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'login_screen_model.dart';
 export 'login_screen_model.dart';
 
@@ -29,6 +31,13 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => LoginScreenModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (FFAppState().isLoggedIn == true) {
+        context.pushNamed(CreatorStudioHubWidget.routeName);
+      }
+    });
   }
 
   @override
@@ -40,6 +49,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -232,6 +243,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                   GetYouTubeStreamDataCall.streamKey(
                                 (_model.apiResult?.jsonBody ?? ''),
                               ).toString();
+                              FFAppState().isLoggedIn = true;
                               safeSetState(() {});
 
                               context.goNamed(CreatorStudioHubWidget.routeName);

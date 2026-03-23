@@ -115,6 +115,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                             onPressed: () async {
                               FFAppState().globalRtmp = '';
                               FFAppState().globalStreamKey = '';
+                              FFAppState().isLoggedIn = false;
                               safeSetState(() {});
 
                               context.goNamed(LoginScreenWidget.routeName);
