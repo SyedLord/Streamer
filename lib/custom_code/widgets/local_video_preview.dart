@@ -38,22 +38,41 @@ class _LocalVideoPreviewState extends State<LocalVideoPreview> {
     _initializeVideo();
   }
 
+  // ---> YEH NAYA HISSA HAI JO VIDEO CHANGE HONE PAR TRIGGER HOGA <---
+  @override
+  void didUpdateWidget(LocalVideoPreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check karega ke nayi file purani se alag hai ya nahi
+    if (widget.videoFile != oldWidget.videoFile) {
+      _controller?.dispose(); // Purani video ka engine band karega
+      setState(() {
+        _isInitialized = false; // Loading screen wapas layega
+      });
+      _initializeVideo(); // Nayi video ko load karega
+    }
+  }
+  // ------------------------------------------------------------------
+
   Future<void> _initializeVideo() async {
     // Agar video bytes nahi hain toh wapas jao
     if (widget.videoFile.bytes == null) return;
 
-    // Video ko temp directory mein save karna taake player read kar sake
     final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/preview_video.mp4');
+    // Naya timestamp lagaya taake purani video cache na ho jaye
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final tempFile = File('${tempDir.path}/preview_$timestamp.mp4');
+
     await tempFile.writeAsBytes(widget.videoFile.bytes!);
 
-    // Player ko file assign karna
     _controller = VideoPlayerController.file(tempFile)
       ..initialize().then((_) {
-        setState(() {
-          _isInitialized = true;
-        });
-        _controller!.setLooping(true); // Khatam hone par dobara shuru
+        // Yeh mounted check app ko crash hone se bachata hai agar user back chala jaye
+        if (mounted) {
+          setState(() {
+            _isInitialized = true;
+          });
+          _controller!.setLooping(true);
+        }
       });
   }
 
@@ -65,7 +84,6 @@ class _LocalVideoPreviewState extends State<LocalVideoPreview> {
 
   @override
   Widget build(BuildContext context) {
-    // Jab tak video load ho rahi hai, Lal rang ka loading circle dikhaye
     if (!_isInitialized || _controller == null) {
       return Container(
         width: widget.width,
@@ -77,7 +95,6 @@ class _LocalVideoPreviewState extends State<LocalVideoPreview> {
       );
     }
 
-    // Load hone ke baad Video aur Play/Pause button dikhaye
     return Container(
       width: widget.width,
       height: widget.height,
@@ -89,7 +106,6 @@ class _LocalVideoPreviewState extends State<LocalVideoPreview> {
             aspectRatio: _controller!.value.aspectRatio,
             child: VideoPlayer(_controller!),
           ),
-          // Play aur Pause button ka design
           GestureDetector(
             onTap: () {
               setState(() {
