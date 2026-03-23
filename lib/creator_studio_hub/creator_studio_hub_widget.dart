@@ -133,7 +133,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 child: custom_widgets.LocalVideoPreview(
                                   width: double.infinity,
                                   height: 300.0,
-                                  videoFile: _model.finalVideoToStream,
+                                  videoFile: _model.finalVideoToStream!,
                                 ),
                               ),
                             Padding(
