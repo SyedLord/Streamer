@@ -13,10 +13,13 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
 
   // Model for status_badge component.
   late StatusBadgeModel statusBadgeModel;
-  // Stores action output result for [Custom Action - pickVideoFilePath] action in ChangeVideoBtn widget.
-  String? changedVideo;
-  // Stores action output result for [Custom Action - pickVideoFilePath] action in TapToUpload widget.
-  String? videoPathResult;
+  bool isDataUploading_changedVideo = false;
+  FFUploadedFile uploadedLocalFile_changedVideo =
+      FFUploadedFile(bytes: Uint8List.fromList([]), originalFilename: '');
+
+  bool isDataUploading_uploadData9d5 = false;
+  FFUploadedFile uploadedLocalFile_uploadData9d5 =
+      FFUploadedFile(bytes: Uint8List.fromList([]), originalFilename: '');
 
   @override
   void initState(BuildContext context) {
