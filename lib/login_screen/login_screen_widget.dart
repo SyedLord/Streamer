@@ -35,7 +35,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (FFAppState().isLoggedIn == true) {
-        context.goNamed(CreatorStudioHub2Widget.routeName);
+        context.goNamed(CreatorStudioHubCopyWidget.routeName);
       }
     });
   }
@@ -258,8 +258,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               FFAppState().youtubeAccessToken = _model.myToken!;
                               safeSetState(() {});
 
-                              context
-                                  .goNamed(CreatorStudioHub2Widget.routeName);
+                              context.goNamed(
+                                  CreatorStudioHubCopyWidget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
