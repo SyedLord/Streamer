@@ -741,6 +741,20 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 FFAppState().globalRtmp,
                                 _model.generatedKey,
                               );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    _model.generatedKey!,
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: Duration(milliseconds: 10000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
+                                ),
+                              );
 
                               context
                                   .pushNamed(LiveBroadcastModeWidget.routeName);
