@@ -6,3 +6,4 @@ export 'web_google_login.dart' show webGoogleLogin;
 export 'pick_safe_video_path.dart' show pickSafeVideoPath;
 export 'setup_you_tube_live_event.dart' show setupYouTubeLiveEvent;
 export 'pick_thumbnail_image.dart' show pickThumbnailImage;
+export 'pick_safe_video_path2.dart' show pickSafeVideoPath2;

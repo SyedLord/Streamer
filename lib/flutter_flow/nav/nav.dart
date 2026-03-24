@@ -64,6 +64,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: CreatorStudioHub2Widget.routeName,
           path: CreatorStudioHub2Widget.routePath,
           builder: (context, params) => CreatorStudioHub2Widget(),
+        ),
+        FFRoute(
+          name: CreatorStudioHubCopyWidget.routeName,
+          path: CreatorStudioHubCopyWidget.routePath,
+          builder: (context, params) => CreatorStudioHubCopyWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
