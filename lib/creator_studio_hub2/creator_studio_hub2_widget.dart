@@ -650,6 +650,59 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                     ],
                                   ),
                                 ),
+                                if (FFAppState().selectedVideoPath != '')
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        _model.pickedNewVideo =
+                                            await actions.pickSafeVideoPath();
+                                        FFAppState().selectedVideoPath =
+                                            _model.pickedNewVideo!;
+                                        safeSetState(() {});
+
+                                        safeSetState(() {});
+                                      },
+                                      text: 'Change Video',
+                                      options: FFButtonOptions(
+                                        height: 40.0,
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            16.0, 0.0, 16.0, 0.0),
+                                        iconPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              font: GoogleFonts.interTight(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .titleSmall
+                                                        .fontStyle,
+                                              ),
+                                              color: Colors.white,
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleSmall
+                                                      .fontStyle,
+                                            ),
+                                        elevation: 0.0,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
+                                  ),
                               ].divide(SizedBox(height: 4.0)),
                             ),
                           ),

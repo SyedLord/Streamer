@@ -22,6 +22,8 @@ class CreatorStudioHub2Model extends FlutterFlowModel<CreatorStudioHub2Widget> {
   String? selectedThumbPath;
   // Stores action output result for [Custom Action - pickSafeVideoPath] action in TapToUpload widget.
   String? pickedPath;
+  // Stores action output result for [Custom Action - pickSafeVideoPath] action in ChangeVideoBtn widget.
+  String? pickedNewVideo;
   // State field(s) for Privacy widget.
   String? privacyValue;
   FormFieldController<String>? privacyValueController;
