@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Naye imports
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -14,18 +13,16 @@ Future<String?> setupYouTubeLiveEvent(
   String? token,
   String? title,
   String? privacy,
-  String? categoryId, // String numeric category pass
+  String? categoryId,
 ) async {
-  // Master check: If essential strings are null or EMPTY, fail fast and return null.
   if (token == null ||
-          token.isEmpty ||
-          title == null ||
-          title.isEmpty ||
-          privacy == null ||
-          privacy.isEmpty ||
-          categoryId == null ||
-          categoryId.isEmpty // This check was missing!
-      ) {
+      token.isEmpty ||
+      title == null ||
+      title.isEmpty ||
+      privacy == null ||
+      privacy.isEmpty ||
+      categoryId == null ||
+      categoryId.isEmpty) {
     print("Error: Missing essential details for YouTube stream.");
     return null;
   }
@@ -37,7 +34,8 @@ Future<String?> setupYouTubeLiveEvent(
   };
 
   try {
-    print("1. Creating Broadcast (Title, Privacy, Category: $categoryId)...");
+    // ─── STEP 1: Create Broadcast (categoryId intentionally OMITTED) ───────
+    print("1. Creating Broadcast (Title: $title, Privacy: $privacy)...");
     final broadcastRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status,contentDetails'),
@@ -45,27 +43,53 @@ Future<String?> setupYouTubeLiveEvent(
       body: jsonEncode({
         "snippet": {
           "title": title,
-          "categoryId":
-              categoryId, // Passing the validated string category ID directly.
           "description": "Live Streamed from SyedLord Studio",
           "scheduledStartTime": DateTime.now().toUtc().toIso8601String()
+          // ❌ categoryId is NOT placed here — YouTube ignores it silently
         },
         "status": {"privacyStatus": privacy},
-        // Auto-start and auto-stop are essential for professional streaming.
         "contentDetails": {"enableAutoStart": true, "enableAutoStop": true}
       }),
     );
 
-    // Safety check for broadcast creation.
     if (broadcastRes.statusCode != 200) {
-      print(
-          "Failed to create broadcast. YouTube API Response: ${broadcastRes.body}");
+      print("Failed to create broadcast. Response: ${broadcastRes.body}");
       return null;
     }
+
     final broadcastData = jsonDecode(broadcastRes.body);
     final broadcastId = broadcastData['id'];
+    print("Broadcast created. ID: $broadcastId");
 
-    print("2. Generating New Stream Key...");
+    // ─── STEP 2: Set categoryId via videos.update ──────────────────────────
+    // The broadcastId IS the videoId for a live broadcast on YouTube.
+    // categoryId must be set here on the videos resource, not liveBroadcasts.
+    print("2. Setting Category ID ($categoryId) via videos.update...");
+    final categoryRes = await http.put(
+      Uri.parse(
+          'https://youtube.googleapis.com/youtube/v3/videos?part=snippet'),
+      headers: headers,
+      body: jsonEncode({
+        "id": broadcastId,
+        "snippet": {
+          "title": title, // Required: must re-send title
+          "categoryId": categoryId, // ✅ This is the correct place for it
+          "description": "Live Streamed from SyedLord Studio"
+        }
+      }),
+    );
+
+    if (categoryRes.statusCode != 200) {
+      // Non-fatal: log the failure but continue — stream still works,
+      // just without the custom category.
+      print(
+          "Warning: Category update failed (non-fatal). Response: ${categoryRes.body}");
+    } else {
+      print("Category set successfully to ID: $categoryId");
+    }
+
+    // ─── STEP 3: Generate New Stream Key ──────────────────────────────────
+    print("3. Generating New Stream Key...");
     final streamRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveStreams?part=snippet,cdn'),
@@ -80,37 +104,33 @@ Future<String?> setupYouTubeLiveEvent(
       }),
     );
 
-    // Safety check for stream key generation.
     if (streamRes.statusCode != 200) {
-      print(
-          "Failed to generate stream key. YouTube API Response: ${streamRes.body}");
+      print("Failed to generate stream key. Response: ${streamRes.body}");
       return null;
     }
+
     final streamData = jsonDecode(streamRes.body);
     final streamId = streamData['id'];
-    // This is the essential key we need to pass to FFmpeg.
     final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
 
-    print("3. Binding Stream to Broadcast...");
+    // ─── STEP 4: Bind Stream to Broadcast ─────────────────────────────────
+    print("4. Binding Stream to Broadcast...");
     final bindRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts/bind?id=$broadcastId&part=id&streamId=$streamId'),
       headers: headers,
     );
 
-    // Safety check for binding.
     if (bindRes.statusCode != 200) {
-      print(
-          "Failed to bind stream to broadcast. YouTube API Response: ${bindRes.body}");
+      print("Failed to bind stream. Response: ${bindRes.body}");
       return null;
     }
 
-    print(
-        "SUCCESS! Livestream event generated and bound. Key is ready: $newStreamKey");
-    return newStreamKey; // Success, return the key.
+    print("SUCCESS! Stream ready. Key: $newStreamKey");
+    return newStreamKey;
   } catch (e) {
-    print("An unexpected API error occurred: $e");
-    return null; // Unexpected error, return null.
+    print("Unexpected error: $e");
+    return null;
   }
 }
 // Set your action name, define your arguments and return parameter,
