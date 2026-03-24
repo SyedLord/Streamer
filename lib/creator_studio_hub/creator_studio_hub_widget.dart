@@ -1,4 +1,3 @@
-import '/backend/api_requests/api_calls.dart';
 import '/components/status_badge_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -520,17 +519,11 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 child: FlutterFlowDropDown<String>(
                                   controller: _model.categoryValueController ??=
                                       FormFieldController<String>(null),
-                                  options: [
-                                    '\tFilm & Animation',
-                                    '\tAutos & Vehicles',
+                                  options: List<String>.from(['1', '10', '20']),
+                                  optionLabels: [
+                                    'Film & Animation',
                                     'Music',
-                                    'Pets & Animals',
-                                    'Sports',
-                                    'Short Movies',
-                                    'Travel & Events',
-                                    'Gaming',
-                                    'Videoblogging',
-                                    ''
+                                    'Gaming'
                                   ],
                                   onChanged: (val) => safeSetState(
                                       () => _model.categoryValue = val),
@@ -731,42 +724,21 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         FFButtonWidget(
                           onPressed: () async {
                             if (FFAppState().selectedVideoPath != '') {
-                              _model.apiResultl4h =
-                                  await CreateYouTubeBroadcastCall.call(
-                                authToken: FFAppState().youtubeAccessToken,
-                                streamTitle:
-                                    _model.videoTitleTextController.text,
-                                streamPrivacy: _model.privacyValue,
-                                startTime: dateTimeFormat(
-                                    "yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'",
-                                    getCurrentTimestamp),
+                              _model.generatedKey =
+                                  await actions.setupYouTubeLiveEvent(
+                                FFAppState().youtubeAccessToken,
+                                _model.videoTitleTextController.text,
+                                _model.privacyValue,
+                                _model.categoryValue,
+                              );
+                              await actions.startFFmpegStream(
+                                FFAppState().selectedVideoPath,
+                                FFAppState().globalRtmp,
+                                _model.generatedKey,
                               );
 
-                              if ((_model.apiResultl4h?.succeeded ?? true)) {
-                                await actions.startFFmpegStream(
-                                  FFAppState().selectedVideoPath,
-                                  FFAppState().globalRtmp,
-                                  FFAppState().globalStreamKey,
-                                );
-
-                                context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      (_model.apiResultl4h?.bodyText ?? ''),
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 10000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
-                                );
-                              }
+                              context
+                                  .pushNamed(LiveBroadcastModeWidget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

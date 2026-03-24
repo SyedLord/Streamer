@@ -1,4 +1,3 @@
-import '/backend/api_requests/api_calls.dart';
 import '/components/status_badge_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -29,8 +28,8 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   // State field(s) for Category widget.
   String? categoryValue;
   FormFieldController<String>? categoryValueController;
-  // Stores action output result for [Backend Call - API (CreateYouTubeBroadcast)] action in Button widget.
-  ApiCallResponse? apiResultl4h;
+  // Stores action output result for [Custom Action - setupYouTubeLiveEvent] action in Button widget.
+  String? generatedKey;
 
   @override
   void initState(BuildContext context) {
