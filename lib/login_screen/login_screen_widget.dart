@@ -35,7 +35,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (FFAppState().isLoggedIn == true) {
-        context.goNamed(CreatorStudioHubCopyWidget.routeName);
+        context.goNamed(CreatorStudioHub2CopyWidget.routeName);
       }
     });
   }
@@ -259,7 +259,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               safeSetState(() {});
 
                               context.goNamed(
-                                  CreatorStudioHubCopyWidget.routeName);
+                                  CreatorStudioHub2CopyWidget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

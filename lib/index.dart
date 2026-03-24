@@ -10,3 +10,5 @@ export '/creator_studio_hub2/creator_studio_hub2_widget.dart'
     show CreatorStudioHub2Widget;
 export '/creator_studio_hub_copy/creator_studio_hub_copy_widget.dart'
     show CreatorStudioHubCopyWidget;
+export '/creator_studio_hub2_copy/creator_studio_hub2_copy_widget.dart'
+    show CreatorStudioHub2CopyWidget;
