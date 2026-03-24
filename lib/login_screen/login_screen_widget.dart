@@ -35,7 +35,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (FFAppState().isLoggedIn == true) {
-        context.goNamed(CreatorStudioHubCopyWidget.routeName);
+        context.goNamed(CreatorStudioHub2Widget.routeName);
       }
     });
   }
