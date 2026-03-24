@@ -520,7 +520,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                             safeSetState(() {});
                                           },
                                           child: Container(
-                                            height: 120.0,
+                                            height: 118.0,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
@@ -653,11 +653,11 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                       if (FFAppState().selectedVideoPath != '')
                                         Container(
                                           width: double.infinity,
-                                          height: 120.0,
+                                          height: 118.0,
                                           child:
                                               custom_widgets.LocalVideoPreview(
                                             width: double.infinity,
-                                            height: 120.0,
+                                            height: 118.0,
                                             videoPath:
                                                 FFAppState().selectedVideoPath,
                                           ),
