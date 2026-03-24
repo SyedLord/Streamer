@@ -39,7 +39,13 @@ Future<String?> setupYouTubeLiveEvent(
           "categoryId": categoryId,
           "scheduledStartTime": DateTime.now().toUtc().toIso8601String()
         },
-        "status": {"privacyStatus": privacy}
+        // "status": {"privacyStatus": privacy}
+        "status": {
+          "privacyStatus": privacy,
+          "selfBroadcast": true,
+          "enableAutoStart": true,
+          "enableAutoStop": true
+        }
       }),
     );
 
