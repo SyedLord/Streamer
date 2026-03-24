@@ -258,8 +258,8 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               FFAppState().youtubeAccessToken = _model.myToken!;
                               safeSetState(() {});
 
-                              context.goNamed(
-                                  CreatorStudioHubCopyWidget.routeName);
+                              context
+                                  .goNamed(CreatorStudioHub2Widget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
