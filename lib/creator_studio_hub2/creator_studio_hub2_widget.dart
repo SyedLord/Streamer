@@ -8,7 +8,6 @@ import '/flutter_flow/form_field_controller.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -386,17 +385,15 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                       ),
                                       child: Stack(
                                         children: [
-                                          Opacity(
-                                            opacity: 0.4,
-                                            child: CachedNetworkImage(
-                                              fadeInDuration:
-                                                  Duration(milliseconds: 0),
-                                              fadeOutDuration:
-                                                  Duration(milliseconds: 0),
-                                              imageUrl:
-                                                  'https://dimg.dreamflow.cloud/v1/image/gaming thumbnail background',
+                                          Container(
+                                            width: double.infinity,
+                                            height: 120.0,
+                                            child: custom_widgets
+                                                .LocalImagePreview(
+                                              width: double.infinity,
                                               height: 120.0,
-                                              fit: BoxFit.cover,
+                                              imagePath:
+                                                  _model.localThumbnailPath,
                                             ),
                                           ),
                                           Align(
