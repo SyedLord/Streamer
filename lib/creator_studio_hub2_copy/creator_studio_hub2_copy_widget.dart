@@ -641,11 +641,9 @@ class _CreatorStudioHub2CopyWidgetState
                                           width: double.infinity,
                                           height: 118.0,
                                           child:
-                                              custom_widgets.LocalVideoPreview(
+                                              custom_widgets.LocalVideoPreview2(
                                             width: double.infinity,
                                             height: 118.0,
-                                            videoPath:
-                                                FFAppState().selectedVideoPath,
                                           ),
                                         ),
                                     ],
