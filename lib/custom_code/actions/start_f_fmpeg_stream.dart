@@ -6,35 +6,41 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Imports lazmi add karein
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+// Naye imports (Aapke pakray hue sahi naam ke sath)
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 
 Future startFFmpegStream(
-    FFUploadedFile videoData, String streamUrl, String streamKey) async {
-  String rtmpUrl = '$streamUrl/$streamKey';
+  String? videoPath,
+  String? streamUrl,
+  String? streamKey,
+) async {
+  // Agar koi cheez miss hai toh stream start na ho
+  if (videoPath == null || streamUrl == null || streamKey == null) {
+    print("Error: Missing Data for Stream");
+    return;
+  }
 
-  final tempDir = await getTemporaryDirectory();
-  final timestamp = DateTime.now().millisecondsSinceEpoch;
-  final tempFilePath = '${tempDir.path}/live_stream_$timestamp.mp4';
+  // YouTube ka mukammal RTMP URL banana
+  String fullRtmpUrl = "$streamUrl/$streamKey";
 
-  final tempFile = File(tempFilePath);
-  await tempFile.writeAsBytes(videoData.bytes!);
+  // FFmpeg ki command
+  // -re ka matlab hai video ko uski original speed par stream karna
+  // -c copy ka matlab hai phone ka processor use kiye bina direct file bhejna
+  String command = "-re -i \"$videoPath\" -c copy -f flv \"$fullRtmpUrl\"";
 
-  print("✅ Video file save ho gayi hai temp path par: $tempFilePath");
+  print("Starting stream with command: $command");
 
-  String command =
-      '-re -i "$tempFilePath" -c copy -f flv -flvflags no_duration_filesize "$rtmpUrl"';
-
+  // Stream start karna (Background mein chalti rahegi)
   FFmpegKit.executeAsync(command, (session) async {
     final returnCode = await session.getReturnCode();
 
     if (ReturnCode.isSuccess(returnCode)) {
-      print("Stream Makkhan chal rahi hai!");
+      print("SUCCESS: Stream completely finished.");
+    } else if (ReturnCode.isCancel(returnCode)) {
+      print("CANCELLED: Stream was stopped by user.");
     } else {
-      print("Bhai koi error aa gaya stream mein.");
+      print("ERROR: Stream failed with return code $returnCode.");
     }
   });
 }

@@ -426,7 +426,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                           onPressed: () async {
                             if (FFAppState().selectedVideoPath != '') {
                               await actions.startFFmpegStream(
-                                _model.finalVideoToStream!,
+                                FFAppState().selectedVideoPath,
                                 FFAppState().globalRtmp,
                                 FFAppState().globalStreamKey,
                               );
