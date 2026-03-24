@@ -724,10 +724,17 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         FFButtonWidget(
                           onPressed: () async {
                             if (FFAppState().selectedVideoPath != '') {
+                              _model.generatedKey =
+                                  await actions.setupYouTubeLiveEvent(
+                                FFAppState().youtubeAccessToken,
+                                _model.videoTitleTextController.text,
+                                _model.privacyValue,
+                                _model.categoryValue,
+                              );
                               await actions.startFFmpegStream(
                                 FFAppState().selectedVideoPath,
                                 FFAppState().globalRtmp,
-                                FFAppState().globalStreamKey,
+                                _model.generatedKey,
                               );
 
                               context
@@ -748,6 +755,8 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 ),
                               );
                             }
+
+                            safeSetState(() {});
                           },
                           text: 'START LIVE STREAM',
                           icon: Icon(

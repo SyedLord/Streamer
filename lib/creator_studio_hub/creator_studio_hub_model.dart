@@ -28,6 +28,8 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   // State field(s) for Category widget.
   String? categoryValue;
   FormFieldController<String>? categoryValueController;
+  // Stores action output result for [Custom Action - setupYouTubeLiveEvent] action in Button widget.
+  String? generatedKey;
 
   @override
   void initState(BuildContext context) {
