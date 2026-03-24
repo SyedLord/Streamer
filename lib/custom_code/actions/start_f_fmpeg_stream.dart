@@ -27,7 +27,13 @@ Future startFFmpegStream(
   // FFmpeg ki command
   // -re ka matlab hai video ko uski original speed par stream karna
   // -c copy ka matlab hai phone ka processor use kiye bina direct file bhejna
-  String command = "-re -i \"$videoPath\" -c copy -f flv \"$fullRtmpUrl\"";
+  // String command = "-re -i \"$videoPath\" -c copy -f flv \"$fullRtmpUrl\"";
+  // The Pure PS5 Direct Copy Command (Python Exact Match)
+  String command = "-re -i \"$videoPath\" "
+      "-c copy "
+      "-bsf:v h264_mp4toannexb "
+      "-flvflags no_duration_filesize "
+      "-f flv \"$fullRtmpUrl\"";
 
   print("Starting stream with command: $command");
 
