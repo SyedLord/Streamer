@@ -731,6 +731,11 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 _model.privacyValue,
                                 _model.categoryValue,
                               );
+                              await Future.delayed(
+                                Duration(
+                                  milliseconds: 5000,
+                                ),
+                              );
                               await actions.startFFmpegStream(
                                 FFAppState().selectedVideoPath,
                                 FFAppState().globalRtmp,
