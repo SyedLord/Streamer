@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart';
 
 Future startFFmpegStream(
   String? videoPath,
@@ -20,24 +21,35 @@ Future startFFmpegStream(
   }
 
   String fullRtmpUrl = "$streamUrl/$streamKey";
+  String inputPath = videoPath;
 
-  // ✅ Sirf yahan se quotes hatao — content:// URI mein quotes nahi lagte
-  String command = "-re -i $videoPath "
+  // content:// URI ko FFmpeg ki samajh mein translate karo
+  if (videoPath.startsWith('content://')) {
+    inputPath =
+        await FFmpegKitConfig.getSafParameterForRead(videoPath) ?? videoPath;
+    print("SAF translated path: $inputPath");
+  }
+
+  String command = "-re -i \"$inputPath\" "
       "-c:v libx264 -preset ultrafast "
       "-b:v 6800k -maxrate 6800k -bufsize 13600k "
       "-g 60 -c:a aac -b:a 128k -ar 44100 "
-      "-f flv \"$fullRtmpUrl\""; // RTMP URL par quotes rehne chahiye
+      "-f flv \"$fullRtmpUrl\"";
 
-  print("Starting stream with command: $command");
+  print("Starting stream: $command");
 
   FFmpegKit.executeAsync(command, (session) async {
     final returnCode = await session.getReturnCode();
     if (ReturnCode.isSuccess(returnCode)) {
-      print("SUCCESS: Stream completely finished.");
+      print("SUCCESS: Stream finished.");
     } else if (ReturnCode.isCancel(returnCode)) {
-      print("CANCELLED: Stream was stopped by user.");
+      print("CANCELLED: Stream stopped.");
     } else {
-      print("ERROR: Stream failed with return code $returnCode.");
+      final logs = await session.getLogs();
+      logs.reversed
+          .take(5)
+          .forEach((log) => print("FFmpeg: ${log.getMessage()}"));
+      print("ERROR: Code $returnCode");
     }
   });
 }
