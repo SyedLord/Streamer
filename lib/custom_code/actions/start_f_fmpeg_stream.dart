@@ -30,9 +30,15 @@ Future startFFmpegStream(
   // String command = "-re -i \"$videoPath\" -c copy -f flv \"$fullRtmpUrl\"";
   // The Pure PS5 Direct Copy Command (Python Exact Match)
   // YouTube Optimized Command (Mobile Network Stutter Fix)
+  // String command = "-re -i \"$videoPath\" "
+  //     "-c:v libx264 -preset ultrafast "
+  //     "-b:v 3000k -maxrate 3000k -bufsize 6000k "
+  //     "-g 60 -c:a aac -b:a 128k -ar 44100 "
+  //     "-f flv \"$fullRtmpUrl\"";
+  // YouTube 1080p High-Quality Command
   String command = "-re -i \"$videoPath\" "
       "-c:v libx264 -preset ultrafast "
-      "-b:v 3000k -maxrate 3000k -bufsize 6000k "
+      "-b:v 6800k -maxrate 6800k -bufsize 13600k "
       "-g 60 -c:a aac -b:a 128k -ar 44100 "
       "-f flv \"$fullRtmpUrl\"";
 
