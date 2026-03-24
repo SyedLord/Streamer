@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/components/status_badge_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -23,11 +24,13 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   TextEditingController? videoTitleTextController;
   String? Function(BuildContext, String?)? videoTitleTextControllerValidator;
   // State field(s) for Privacy widget.
-  String? privacyValue1;
-  FormFieldController<String>? privacyValueController1;
-  // State field(s) for Privacy widget.
-  String? privacyValue2;
-  FormFieldController<String>? privacyValueController2;
+  String? privacyValue;
+  FormFieldController<String>? privacyValueController;
+  // State field(s) for Category widget.
+  String? categoryValue;
+  FormFieldController<String>? categoryValueController;
+  // Stores action output result for [Backend Call - API (CreateYouTubeBroadcast)] action in Button widget.
+  ApiCallResponse? apiResultl4h;
 
   @override
   void initState(BuildContext context) {

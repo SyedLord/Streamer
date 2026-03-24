@@ -72,6 +72,46 @@ class GetYouTubeChannelInfoCall {
       );
 }
 
+class CreateYouTubeBroadcastCall {
+  static Future<ApiCallResponse> call({
+    String? authToken = '',
+    String? streamTitle = '',
+    String? streamPrivacy = '',
+    String? startTime = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "snippet": {
+    "title": "${escapeStringForJson(streamTitle)}",
+    "description": "Live Streamed from SyedLord Studio",
+    "scheduledStartTime": "${escapeStringForJson(startTime)}"
+  },
+  "status": {
+    "privacyStatus": "${escapeStringForJson(streamPrivacy)}"
+  }
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'CreateYouTubeBroadcast',
+      apiUrl:
+          'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization': 'Bearer ${authToken}',
+        'Accept': 'application/json',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;
@@ -114,4 +154,15 @@ String _serializeJson(dynamic jsonVar, [bool isList = false]) {
     }
     return isList ? '[]' : '{}';
   }
+}
+
+String? escapeStringForJson(String? input) {
+  if (input == null) {
+    return null;
+  }
+  return input
+      .replaceAll('\\', '\\\\')
+      .replaceAll('"', '\\"')
+      .replaceAll('\n', '\\n')
+      .replaceAll('\t', '\\t');
 }

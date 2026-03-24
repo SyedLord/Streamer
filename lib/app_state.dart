@@ -91,6 +91,12 @@ class FFAppState extends ChangeNotifier {
   set selectedVideoPath(String value) {
     _selectedVideoPath = value;
   }
+
+  String _youtubeAccessToken = '';
+  String get youtubeAccessToken => _youtubeAccessToken;
+  set youtubeAccessToken(String value) {
+    _youtubeAccessToken = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

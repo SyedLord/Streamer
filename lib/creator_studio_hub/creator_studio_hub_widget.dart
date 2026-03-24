@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/components/status_badge_widget.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -463,58 +464,13 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 10.0),
                                 child: FlutterFlowDropDown<String>(
-                                  controller: _model.privacyValueController1 ??=
+                                  controller: _model.privacyValueController ??=
                                       FormFieldController<String>(null),
                                   options: ['Public', 'Private', 'Unlisted'],
                                   onChanged: (val) => safeSetState(
-                                      () => _model.privacyValue1 = val),
+                                      () => _model.privacyValue = val),
                                   width: double.infinity,
                                   height: 40.0,
-                                  searchHintTextStyle:
-                                      FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .override(
-                                            font: GoogleFonts.inter(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .labelMedium
-                                                      .fontStyle,
-                                            ),
-                                            letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .fontStyle,
-                                          ),
-                                  searchTextStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        font: GoogleFonts.inter(
-                                          fontWeight:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontWeight,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .fontStyle,
-                                        ),
-                                        letterSpacing: 0.0,
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -537,7 +493,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                             .fontStyle,
                                       ),
                                   hintText: 'Select Privacy',
-                                  searchHintText: 'Search...',
                                   icon: Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: FlutterFlowTheme.of(context)
@@ -554,7 +509,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       12.0, 0.0, 12.0, 0.0),
                                   hidesUnderline: true,
                                   isOverButton: false,
-                                  isSearchable: true,
+                                  isSearchable: false,
                                   isMultiSelect: false,
                                 ),
                               ),
@@ -563,7 +518,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 0.0, 10.0),
                                 child: FlutterFlowDropDown<String>(
-                                  controller: _model.privacyValueController2 ??=
+                                  controller: _model.categoryValueController ??=
                                       FormFieldController<String>(null),
                                   options: [
                                     '\tFilm & Animation',
@@ -578,7 +533,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     ''
                                   ],
                                   onChanged: (val) => safeSetState(
-                                      () => _model.privacyValue2 = val),
+                                      () => _model.categoryValue = val),
                                   width: double.infinity,
                                   height: 40.0,
                                   searchHintTextStyle:
@@ -776,14 +731,24 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         FFButtonWidget(
                           onPressed: () async {
                             if (FFAppState().selectedVideoPath != '') {
-                              await actions.startFFmpegStream(
-                                FFAppState().selectedVideoPath,
-                                FFAppState().globalRtmp,
-                                FFAppState().globalStreamKey,
+                              _model.apiResultl4h =
+                                  await CreateYouTubeBroadcastCall.call(
+                                authToken: FFAppState().youtubeAccessToken,
+                                streamTitle:
+                                    _model.videoTitleTextController.text,
+                                streamPrivacy: _model.privacyValue,
                               );
 
-                              context
-                                  .pushNamed(LiveBroadcastModeWidget.routeName);
+                              if ((_model.apiResultl4h?.succeeded ?? true)) {
+                                await actions.startFFmpegStream(
+                                  FFAppState().selectedVideoPath,
+                                  FFAppState().globalRtmp,
+                                  FFAppState().globalStreamKey,
+                                );
+
+                                context.pushNamed(
+                                    LiveBroadcastModeWidget.routeName);
+                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -800,6 +765,8 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 ),
                               );
                             }
+
+                            safeSetState(() {});
                           },
                           text: 'START LIVE STREAM',
                           icon: Icon(

@@ -255,6 +255,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                 ).toString(),
                                 'Default',
                               );
+                              FFAppState().youtubeAccessToken = _model.myToken!;
                               safeSetState(() {});
 
                               context.goNamed(CreatorStudioHubWidget.routeName);
