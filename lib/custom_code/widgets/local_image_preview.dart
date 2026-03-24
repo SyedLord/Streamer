@@ -13,9 +13,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class LocalImagePreview extends StatefulWidget {
   const LocalImagePreview({
     Key? key,
+    this.width,
+    this.height,
     this.imagePath,
   }) : super(key: key);
 
+  final double? width;
+  final double? height;
   final String? imagePath;
 
   @override
@@ -29,6 +33,8 @@ class _LocalImagePreviewState extends State<LocalImagePreview> {
     // taake piche wala "Upload" icon aur text nazar aaye
     if (widget.imagePath == null || widget.imagePath!.isEmpty) {
       return Container(
+        width: widget.width,
+        height: widget.height,
         color: Colors.transparent,
       );
     }
@@ -38,12 +44,16 @@ class _LocalImagePreviewState extends State<LocalImagePreview> {
       // Web preview ke liye
       return Image.network(
         widget.imagePath!,
+        width: widget.width,
+        height: widget.height,
         fit: BoxFit.cover,
       );
     } else {
       // Asli Android/iOS device ke liye
       return Image.file(
         File(widget.imagePath!),
+        width: widget.width,
+        height: widget.height,
         fit: BoxFit.cover,
       );
     }
