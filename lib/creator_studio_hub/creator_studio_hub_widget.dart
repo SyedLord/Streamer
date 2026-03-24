@@ -737,6 +737,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 streamTitle:
                                     _model.videoTitleTextController.text,
                                 streamPrivacy: _model.privacyValue,
+                                startTime: getCurrentTimestamp.toString(),
                               );
 
                               if ((_model.apiResultl4h?.succeeded ?? true)) {
