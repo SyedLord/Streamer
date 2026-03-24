@@ -43,7 +43,8 @@
 	<true/>
 
 
-
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Permission Required</string>
 
 
 
