@@ -10,19 +10,18 @@ import 'package:flutter/material.dart';
 // Naye imports
 import 'dart:io';
 import 'package:video_player/video_player.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LocalVideoPreview extends StatefulWidget {
   const LocalVideoPreview({
     Key? key,
     this.width,
     this.height,
-    required this.videoFile,
+    this.videoPath, // Naya parameter (Path lega, Bytes nahi)
   }) : super(key: key);
 
   final double? width;
   final double? height;
-  final FFUploadedFile videoFile;
+  final String? videoPath;
 
   @override
   _LocalVideoPreviewState createState() => _LocalVideoPreviewState();
@@ -38,41 +37,41 @@ class _LocalVideoPreviewState extends State<LocalVideoPreview> {
     _initializeVideo();
   }
 
-  // ---> YEH NAYA HISSA HAI JO VIDEO CHANGE HONE PAR TRIGGER HOGA <---
+  // Jab naya path aaye toh player reload ho
   @override
   void didUpdateWidget(LocalVideoPreview oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Check karega ke nayi file purani se alag hai ya nahi
-    if (widget.videoFile != oldWidget.videoFile) {
-      _controller?.dispose(); // Purani video ka engine band karega
+    if (widget.videoPath != oldWidget.videoPath) {
+      _controller?.dispose();
       setState(() {
-        _isInitialized = false; // Loading screen wapas layega
+        _isInitialized = false;
       });
-      _initializeVideo(); // Nayi video ko load karega
+      _initializeVideo();
     }
   }
-  // ------------------------------------------------------------------
 
   Future<void> _initializeVideo() async {
-    // Agar video bytes nahi hain toh wapas jao
-    if (widget.videoFile.bytes == null) return;
+    // Agar path khali hai toh wapas jao
+    if (widget.videoPath == null || widget.videoPath!.isEmpty) return;
 
-    final tempDir = await getTemporaryDirectory();
-    // Naya timestamp lagaya taake purani video cache na ho jaye
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final tempFile = File('${tempDir.path}/preview_$timestamp.mp4');
+    // Direct phone ki storage wali file pakar rahe hain (No RAM usage)
+    File videoFileObj = File(widget.videoPath!);
 
-    await tempFile.writeAsBytes(widget.videoFile.bytes!);
+    if (!videoFileObj.existsSync()) {
+      print("File nahi mili!");
+      return;
+    }
 
-    _controller = VideoPlayerController.file(tempFile)
+    _controller = VideoPlayerController.file(videoFileObj)
       ..initialize().then((_) {
-        // Yeh mounted check app ko crash hone se bachata hai agar user back chala jaye
         if (mounted) {
           setState(() {
             _isInitialized = true;
           });
-          _controller!.setLooping(true);
+          _controller!.setLooping(true); // Loop set kar diya
         }
+      }).catchError((error) {
+        print("Player error: $error");
       });
   }
 

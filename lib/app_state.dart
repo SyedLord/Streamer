@@ -85,6 +85,12 @@ class FFAppState extends ChangeNotifier {
     _channelName = value;
     prefs.setString('ff_channelName', value);
   }
+
+  String _selectedVideoPath = '';
+  String get selectedVideoPath => _selectedVideoPath;
+  set selectedVideoPath(String value) {
+    _selectedVideoPath = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {
