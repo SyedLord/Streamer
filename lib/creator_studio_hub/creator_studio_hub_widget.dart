@@ -734,7 +734,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                               await actions.startFFmpegStream(
                                 FFAppState().selectedVideoPath,
                                 FFAppState().globalRtmp,
-                                _model.generatedKey,
+                                FFAppState().globalStreamKey,
                               );
 
                               context
