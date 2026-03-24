@@ -737,7 +737,9 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 streamTitle:
                                     _model.videoTitleTextController.text,
                                 streamPrivacy: _model.privacyValue,
-                                startTime: getCurrentTimestamp.toString(),
+                                startTime: dateTimeFormat(
+                                    "yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'",
+                                    getCurrentTimestamp),
                               );
 
                               if ((_model.apiResultl4h?.succeeded ?? true)) {
@@ -753,13 +755,13 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'api not working',
+                                      (_model.apiResultl4h?.bodyText ?? ''),
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
                                       ),
                                     ),
-                                    duration: Duration(milliseconds: 4000),
+                                    duration: Duration(milliseconds: 10000),
                                     backgroundColor:
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
