@@ -30,8 +30,9 @@ Future<String?> setupYouTubeLiveEvent(
   try {
     print("1. Creating Broadcast (Title & Privacy)...");
     final broadcastRes = await http.post(
+      // URL mein bhi contentDetails ka izafa kiya gaya hai
       Uri.parse(
-          'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status'),
+          'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status,contentDetails'),
       headers: headers,
       body: jsonEncode({
         "snippet": {
@@ -39,13 +40,9 @@ Future<String?> setupYouTubeLiveEvent(
           "categoryId": categoryId,
           "scheduledStartTime": DateTime.now().toUtc().toIso8601String()
         },
-        // "status": {"privacyStatus": privacy}
-        "status": {
-          "privacyStatus": privacy,
-          "selfBroadcast": true,
-          "enableAutoStart": true,
-          "enableAutoStop": true
-        }
+        "status": {"privacyStatus": privacy},
+        // YEH WOH NAYA KAMRA (ROOM) HAI JISKI WAJAH SE STREAM ATKI THI
+        "contentDetails": {"enableAutoStart": true, "enableAutoStop": true}
       }),
     );
 
