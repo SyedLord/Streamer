@@ -115,6 +115,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                               FFAppState().globalRtmp = '';
                               FFAppState().globalStreamKey = '';
                               FFAppState().isLoggedIn = false;
+                              FFAppState().selectedVideoPath = '';
                               safeSetState(() {});
 
                               context.goNamed(LoginScreenWidget.routeName);
