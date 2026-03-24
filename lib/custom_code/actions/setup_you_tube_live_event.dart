@@ -14,10 +14,19 @@ Future<String?> setupYouTubeLiveEvent(
   String? token,
   String? title,
   String? privacy,
-  String? categoryId,
+  String? categoryId, // String numeric category pass
 ) async {
-  if (token == null || title == null || privacy == null || categoryId == null) {
-    print("Error: Missing Details");
+  // Master check: If essential strings are null or EMPTY, fail fast and return null.
+  if (token == null ||
+          token.isEmpty ||
+          title == null ||
+          title.isEmpty ||
+          privacy == null ||
+          privacy.isEmpty ||
+          categoryId == null ||
+          categoryId.isEmpty // This check was missing!
+      ) {
+    print("Error: Missing essential details for YouTube stream.");
     return null;
   }
 
@@ -28,26 +37,33 @@ Future<String?> setupYouTubeLiveEvent(
   };
 
   try {
-    print("1. Creating Broadcast (Title & Privacy)...");
+    print("1. Creating Broadcast (Title, Privacy, Category: $categoryId)...");
     final broadcastRes = await http.post(
-      // URL mein bhi contentDetails ka izafa kiya gaya hai
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status,contentDetails'),
       headers: headers,
       body: jsonEncode({
         "snippet": {
           "title": title,
-          "categoryId": categoryId,
+          "categoryId":
+              categoryId, // Passing the validated string category ID directly.
+          "description": "Live Streamed from SyedLord Studio",
           "scheduledStartTime": DateTime.now().toUtc().toIso8601String()
         },
         "status": {"privacyStatus": privacy},
-        // YEH WOH NAYA KAMRA (ROOM) HAI JISKI WAJAH SE STREAM ATKI THI
+        // Auto-start and auto-stop are essential for professional streaming.
         "contentDetails": {"enableAutoStart": true, "enableAutoStop": true}
       }),
     );
 
-    if (broadcastRes.statusCode != 200) return null;
-    final broadcastId = jsonDecode(broadcastRes.body)['id'];
+    // Safety check for broadcast creation.
+    if (broadcastRes.statusCode != 200) {
+      print(
+          "Failed to create broadcast. YouTube API Response: ${broadcastRes.body}");
+      return null;
+    }
+    final broadcastData = jsonDecode(broadcastRes.body);
+    final broadcastId = broadcastData['id'];
 
     print("2. Generating New Stream Key...");
     final streamRes = await http.post(
@@ -64,10 +80,15 @@ Future<String?> setupYouTubeLiveEvent(
       }),
     );
 
-    if (streamRes.statusCode != 200) return null;
+    // Safety check for stream key generation.
+    if (streamRes.statusCode != 200) {
+      print(
+          "Failed to generate stream key. YouTube API Response: ${streamRes.body}");
+      return null;
+    }
     final streamData = jsonDecode(streamRes.body);
     final streamId = streamData['id'];
-    // Yeh rahi hamari nayi Stream Key!
+    // This is the essential key we need to pass to FFmpeg.
     final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
 
     print("3. Binding Stream to Broadcast...");
@@ -77,13 +98,19 @@ Future<String?> setupYouTubeLiveEvent(
       headers: headers,
     );
 
-    if (bindRes.statusCode != 200) return null;
+    // Safety check for binding.
+    if (bindRes.statusCode != 200) {
+      print(
+          "Failed to bind stream to broadcast. YouTube API Response: ${bindRes.body}");
+      return null;
+    }
 
-    print("SUCCESS! New Stream Key is Ready.");
-    return newStreamKey; // Nayi key wapas bhej di
+    print(
+        "SUCCESS! Livestream event generated and bound. Key is ready: $newStreamKey");
+    return newStreamKey; // Success, return the key.
   } catch (e) {
-    print("API Error: $e");
-    return null;
+    print("An unexpected API error occurred: $e");
+    return null; // Unexpected error, return null.
   }
 }
 // Set your action name, define your arguments and return parameter,

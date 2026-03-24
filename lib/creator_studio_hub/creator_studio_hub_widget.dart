@@ -731,33 +731,51 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 _model.privacyValue,
                                 _model.categoryValue,
                               );
-                              await Future.delayed(
-                                Duration(
-                                  milliseconds: 5000,
-                                ),
-                              );
-                              await actions.startFFmpegStream(
-                                FFAppState().selectedVideoPath,
-                                FFAppState().globalRtmp,
-                                _model.generatedKey,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    _model.generatedKey!,
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
+                              if (_model.generatedKey != null &&
+                                  _model.generatedKey != '') {
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 5000,
                                   ),
-                                  duration: Duration(milliseconds: 10000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                ),
-                              );
+                                );
+                                await actions.startFFmpegStream(
+                                  FFAppState().selectedVideoPath,
+                                  FFAppState().globalRtmp,
+                                  _model.generatedKey,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      _model.generatedKey!,
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 10000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
 
-                              context
-                                  .pushNamed(LiveBroadcastModeWidget.routeName);
+                                context.pushNamed(
+                                    LiveBroadcastModeWidget.routeName);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Stream Key not Generated!',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 4000),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).error,
+                                  ),
+                                );
+                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
