@@ -5,3 +5,4 @@ export 'google_logout.dart' show googleLogout;
 export 'web_google_login.dart' show webGoogleLogin;
 export 'pick_safe_video_path.dart' show pickSafeVideoPath;
 export 'setup_you_tube_live_event.dart' show setupYouTubeLiveEvent;
+export 'pick_thumbnail_image.dart' show pickThumbnailImage;

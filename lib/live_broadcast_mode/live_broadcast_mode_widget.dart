@@ -774,7 +774,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                     onTap: () async {
                       await actions.stopFFmpegStream();
 
-                      context.pushNamed(CreatorStudioHubWidget.routeName);
+                      context.goNamed(CreatorStudioHub2Widget.routeName);
                     },
                     child: Container(
                       decoration: BoxDecoration(

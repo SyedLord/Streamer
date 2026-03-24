@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+// Naye imports
 import 'dart:convert';
+import 'dart:io'; // Thumbnail file read karne ke liye [cite: 189]
+import 'dart:typed_data'; // Image bytes ke liye [cite: 7]
 import 'package:http/http.dart' as http;
 
 Future<String?> setupYouTubeLiveEvent(
@@ -14,6 +17,7 @@ Future<String?> setupYouTubeLiveEvent(
   String? title,
   String? privacy,
   String? categoryId,
+  String? thumbnailPath, // Naya parameter [cite: 14]
 ) async {
   if (token == null ||
       token.isEmpty ||
@@ -34,7 +38,7 @@ Future<String?> setupYouTubeLiveEvent(
   };
 
   try {
-    // ─── STEP 1: Create Broadcast (categoryId intentionally OMITTED) ───────
+    // ─── STEP 1: Create Broadcast ───────
     print("1. Creating Broadcast (Title: $title, Privacy: $privacy)...");
     final broadcastRes = await http.post(
       Uri.parse(
@@ -45,51 +49,41 @@ Future<String?> setupYouTubeLiveEvent(
           "title": title,
           "description": "Live Streamed from SyedLord Studio",
           "scheduledStartTime": DateTime.now().toUtc().toIso8601String()
-          // ❌ categoryId is NOT placed here — YouTube ignores it silently
         },
         "status": {"privacyStatus": privacy},
         "contentDetails": {"enableAutoStart": true, "enableAutoStop": true}
       }),
     );
 
-    if (broadcastRes.statusCode != 200) {
-      print("Failed to create broadcast. Response: ${broadcastRes.body}");
-      return null;
-    }
-
+    if (broadcastRes.statusCode != 200) return null;
     final broadcastData = jsonDecode(broadcastRes.body);
     final broadcastId = broadcastData['id'];
-    print("Broadcast created. ID: $broadcastId");
 
     // ─── STEP 2: Set categoryId via videos.update ──────────────────────────
-    // The broadcastId IS the videoId for a live broadcast on YouTube.
-    // categoryId must be set here on the videos resource, not liveBroadcasts.
     print("2. Setting Category ID ($categoryId) via videos.update...");
-    final categoryRes = await http.put(
+    await http.put(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/videos?part=snippet'),
       headers: headers,
       body: jsonEncode({
         "id": broadcastId,
         "snippet": {
-          "title": title, // Required: must re-send title
-          "categoryId": categoryId, // ✅ This is the correct place for it
+          "title": title,
+          "categoryId": categoryId,
           "description": "Live Streamed from SyedLord Studio"
         }
       }),
     );
 
-    if (categoryRes.statusCode != 200) {
-      // Non-fatal: log the failure but continue — stream still works,
-      // just without the custom category.
-      print(
-          "Warning: Category update failed (non-fatal). Response: ${categoryRes.body}");
-    } else {
-      print("Category set successfully to ID: $categoryId");
+    // ─── STEP 3: Upload Thumbnail (Agar select ki gayi hai) ────────────────
+    if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
+      print("3. Uploading Thumbnail from path: $thumbnailPath...");
+      await _uploadThumbnail(
+          token: token, videoId: broadcastId, thumbnailPath: thumbnailPath);
     }
 
-    // ─── STEP 3: Generate New Stream Key ──────────────────────────────────
-    print("3. Generating New Stream Key...");
+    // ─── STEP 4: Generate New Stream Key ──────────────────────────────────
+    print("4. Generating New Stream Key...");
     final streamRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveStreams?part=snippet,cdn'),
@@ -104,33 +98,63 @@ Future<String?> setupYouTubeLiveEvent(
       }),
     );
 
-    if (streamRes.statusCode != 200) {
-      print("Failed to generate stream key. Response: ${streamRes.body}");
-      return null;
-    }
-
+    if (streamRes.statusCode != 200) return null;
     final streamData = jsonDecode(streamRes.body);
     final streamId = streamData['id'];
     final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
 
-    // ─── STEP 4: Bind Stream to Broadcast ─────────────────────────────────
-    print("4. Binding Stream to Broadcast...");
+    // ─── STEP 5: Bind Stream to Broadcast ─────────────────────────────────
+    print("5. Binding Stream to Broadcast...");
     final bindRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts/bind?id=$broadcastId&part=id&streamId=$streamId'),
       headers: headers,
     );
 
-    if (bindRes.statusCode != 200) {
-      print("Failed to bind stream. Response: ${bindRes.body}");
-      return null;
-    }
-
-    print("SUCCESS! Stream ready. Key: $newStreamKey");
+    if (bindRes.statusCode != 200) return null;
     return newStreamKey;
   } catch (e) {
     print("Unexpected error: $e");
     return null;
+  }
+}
+
+// ─── THUMBNAIL UPLOAD HELPER FUNCTION ─────────────────────────────────────
+// Yeh function main API call se bahar (neechay) hi rahega [cite: 128]
+Future<void> _uploadThumbnail({
+  required String token,
+  required String videoId,
+  required String thumbnailPath,
+}) async {
+  try {
+    final imageFile = File(thumbnailPath);
+    if (!await imageFile.exists()) return;
+
+    final Uint8List imageBytes = await imageFile.readAsBytes();
+
+    final String extension = thumbnailPath.split('.').last.toLowerCase();
+    final String mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
+
+    final uploadUri = Uri.parse(
+        'https://youtube.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=$videoId&uploadType=media');
+
+    final thumbnailRes = await http.post(
+      uploadUri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': mimeType,
+        'Content-Length': imageBytes.length.toString(),
+      },
+      body: imageBytes,
+    );
+
+    if (thumbnailRes.statusCode == 200) {
+      print("Thumbnail uploaded successfully.");
+    } else {
+      print("Thumbnail upload failed. Status: ${thumbnailRes.statusCode}");
+    }
+  } catch (e) {
+    print("Thumbnail error: $e");
   }
 }
 // Set your action name, define your arguments and return parameter,

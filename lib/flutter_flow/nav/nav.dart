@@ -59,6 +59,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: LoginScreenWidget.routeName,
           path: LoginScreenWidget.routePath,
           builder: (context, params) => LoginScreenWidget(),
+        ),
+        FFRoute(
+          name: CreatorStudioHub2Widget.routeName,
+          path: CreatorStudioHub2Widget.routePath,
+          builder: (context, params) => CreatorStudioHub2Widget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

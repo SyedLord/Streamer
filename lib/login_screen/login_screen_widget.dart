@@ -257,22 +257,9 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                               );
                               FFAppState().youtubeAccessToken = _model.myToken!;
                               safeSetState(() {});
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    '${FFAppState().globalRtmp}Stream Key: ${FFAppState().globalStreamKey}',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 10000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).secondary,
-                                ),
-                              );
 
-                              context.goNamed(CreatorStudioHubWidget.routeName);
+                              context
+                                  .goNamed(CreatorStudioHub2Widget.routeName);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
