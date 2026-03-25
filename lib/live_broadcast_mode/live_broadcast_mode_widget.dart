@@ -68,14 +68,13 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
           safeSetState(() {});
           _model.liveTime = functions.incrementLiveTime(_model.liveTime);
           safeSetState(() {});
-          _model.instantTimer?.cancel();
           _model.instantTimer2 = InstantTimer.periodic(
             duration: Duration(milliseconds: 1000),
             callback: (timer) async {
               _model.liveTime = functions.incrementLiveTime(_model.liveTime);
               safeSetState(() {});
             },
-            startImmediately: true,
+            startImmediately: false,
           );
         },
         startImmediately: true,
