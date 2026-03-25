@@ -41,16 +41,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, _) => LoginScreenWidget(),
         ),
         FFRoute(
-          name: StreamConfigurationWidget.routeName,
-          path: StreamConfigurationWidget.routePath,
-          builder: (context, params) => StreamConfigurationWidget(),
-        ),
-        FFRoute(
-          name: CreatorStudioHubWidget.routeName,
-          path: CreatorStudioHubWidget.routePath,
-          builder: (context, params) => CreatorStudioHubWidget(),
-        ),
-        FFRoute(
           name: LiveBroadcastModeWidget.routeName,
           path: LiveBroadcastModeWidget.routePath,
           builder: (context, params) => LiveBroadcastModeWidget(
@@ -66,19 +56,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => LoginScreenWidget(),
         ),
         FFRoute(
-          name: CreatorStudioHub2Widget.routeName,
-          path: CreatorStudioHub2Widget.routePath,
-          builder: (context, params) => CreatorStudioHub2Widget(),
-        ),
-        FFRoute(
-          name: CreatorStudioHubCopyWidget.routeName,
-          path: CreatorStudioHubCopyWidget.routePath,
-          builder: (context, params) => CreatorStudioHubCopyWidget(),
-        ),
-        FFRoute(
-          name: CreatorStudioHub2CopyWidget.routeName,
-          path: CreatorStudioHub2CopyWidget.routePath,
-          builder: (context, params) => CreatorStudioHub2CopyWidget(),
+          name: CreatorStudioHubWidget.routeName,
+          path: CreatorStudioHubWidget.routePath,
+          builder: (context, params) => CreatorStudioHubWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

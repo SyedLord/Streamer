@@ -776,7 +776,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                     onPressed: () async {
                       await actions.stopFFmpegStream();
 
-                      context.goNamed(CreatorStudioHub2CopyWidget.routeName);
+                      context.goNamed(CreatorStudioHubWidget.routeName);
                     },
                     text: 'STOP STREAMING',
                     icon: Icon(
