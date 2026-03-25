@@ -41,9 +41,9 @@ Future<void> manageLiveDashboard(
     _clockTimer?.cancel();
     _apiTimer?.cancel();
 
-    // UI ko default pe set karein
+    // 🛠️ UPDATE: Default ko 00:00:00 se badal kar "Starting..." kar diya
     FFAppState().update(() {
-      FFAppState().liveTime = "00:00:00";
+      FFAppState().liveTime = "Starting...";
       FFAppState().liveHealth = "Checking...";
       FFAppState().liveViewers = "0";
     });
@@ -67,7 +67,9 @@ Future<void> manageLiveDashboard(
           if (videoData['items'] != null && videoData['items'].isNotEmpty) {
             final details = videoData['items'][0]['liveStreamingDetails'];
             String viewers = details['concurrentViewers'] ?? "0";
-            String duration = FFAppState().liveTime;
+
+            // 🛠️ UPDATE: Agar YouTube ne time nahi diya toh "Starting..." hi rakho
+            String duration = "Starting...";
 
             if (details['actualStartTime'] != null) {
               DateTime startTime = DateTime.parse(details['actualStartTime']);
@@ -77,6 +79,7 @@ Future<void> manageLiveDashboard(
               String seconds = (diff.inSeconds % 60).toString().padLeft(2, '0');
               duration = "$hours:$minutes:$seconds";
             }
+
             FFAppState().update(() {
               FFAppState().liveViewers = viewers;
               FFAppState().liveTime = duration;
@@ -120,6 +123,7 @@ Future<void> manageLiveDashboard(
     // --- 1-SECOND CLOCK TIMER ---
     _clockTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       String current = FFAppState().liveTime;
+      // 🛠️ LOGIC: Agar text "Starting..." hai, toh ghari tick nahi karegi!
       if (current != "Starting..." && current != "Checking...") {
         try {
           List<String> parts = current.split(':');
