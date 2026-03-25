@@ -17,7 +17,6 @@ Future<String?> setupYouTubeLiveEvent(
   String? categoryId,
   String? thumbnailPath,
 ) async {
-  // ─── TEMPORARY DEBUG — baad mein hata dena ────────────────────────────
   print("=== PARAMETER CHECK ===");
   print(
       "Token: ${token == null ? 'NULL' : token.isEmpty ? 'EMPTY' : 'OK (${token.substring(0, 15)}...)'}");
@@ -30,7 +29,6 @@ Future<String?> setupYouTubeLiveEvent(
   print(
       "ThumbnailPath: ${thumbnailPath == null ? 'NULL' : thumbnailPath.isEmpty ? 'EMPTY' : 'OK: $thumbnailPath'}");
   print("=======================");
-  // ─────────────────────────────────────────────────────────────────────
 
   if (token == null ||
       token.isEmpty ||
@@ -43,7 +41,6 @@ Future<String?> setupYouTubeLiveEvent(
     print("Error: Missing essential details.");
     return null;
   }
-  // ... baaki code same
 
   final headers = {
     'Authorization': 'Bearer $token',
@@ -68,10 +65,6 @@ Future<String?> setupYouTubeLiveEvent(
         "contentDetails": {
           "enableAutoStart": true,
           "enableAutoStop": true,
-          // ✅ Ye flag zaroori hai — bina iske YouTube DVR data store karta
-          // hai aur transition mein delay aata hai
-          // "enableDvr": false,
-          // "recordFromStart": false,
         }
       }),
     );
@@ -101,17 +94,21 @@ Future<String?> setupYouTubeLiveEvent(
     );
 
     if (categoryRes.statusCode != 200) {
-      print("Warning: Category failed (non-fatal): ${categoryRes.body}");
+      print("Category failed (non-fatal): ${categoryRes.body}");
+    } else {
+      print("Category OK");
     }
 
-    // ─── STEP 3: Thumbnail upload karo ────────────────────────────────────
+    // ─── STEP 3: Thumbnail ─────────────────────────────────────────────────
     if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
       print("3. Uploading thumbnail...");
       await _uploadThumbnail(
           token: token, videoId: broadcastId, thumbnailPath: thumbnailPath);
+    } else {
+      print("3. No thumbnail, skipping.");
     }
 
-    // ─── STEP 4: Stream key banao ─────────────────────────────────────────
+    // ─── STEP 4: Stream key banao ──────────────────────────────────────────
     print("4. Generating stream key...");
     final streamRes = await http.post(
       Uri.parse(
@@ -133,11 +130,12 @@ Future<String?> setupYouTubeLiveEvent(
     }
 
     final streamData = jsonDecode(streamRes.body);
-    final streamId = streamData['id'];
     final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
+    final streamId = streamData['id'];
+    print("Stream key OK: $newStreamKey");
 
-    // ─── STEP 5: Bind karo ────────────────────────────────────────────────
-    print("5. Binding stream to broadcast...");
+    // ─── STEP 5: Bind karo ─────────────────────────────────────────────────
+    print("5. Binding...");
     final bindRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts/bind?id=$broadcastId&part=id&streamId=$streamId'),
@@ -149,91 +147,18 @@ Future<String?> setupYouTubeLiveEvent(
       return null;
     }
 
-    // ─── STEP 6: FFmpeg connect hone ka wait karo, phir manually transition
-    // enableAutoStart par rely nahi kar rahe — khud transition kar rahe hain
-    print("6. Waiting for stream to become active before transitioning...");
-    final transitioned = await _waitAndTransitionToLive(
-      token: token,
-      broadcastId: broadcastId,
-      streamId: streamId,
-      headers: headers,
-    );
+    // ─── STEP 6: HATA DIYA ─────────────────────────────────────────────────
+    // _waitAndTransitionToLive hata diya — enableAutoStart khud handle karta hai
+    // FFmpeg connect hoga toh YouTube auto live kar dega
 
-    if (!transitioned) {
-      // Non-fatal — enableAutoStart phir bhi try karega
-      print("Warning: Manual transition failed, relying on enableAutoStart.");
-    }
-
-    print("SUCCESS! Stream key ready: $newStreamKey");
+    print("SUCCESS! Returning stream key.");
     return newStreamKey;
   } catch (e) {
-    print("Unexpected error: $e");
+    print("Exception: $e");
     return null;
   }
 }
 
-// ─── STREAM ACTIVE HONE KA WAIT KARO, PHIR LIVE KARO ─────────────────────────
-// YouTube require karta hai ke stream "active" ho pehle transition se
-// Ye function FFmpeg connect hone ke baad stream health check karta hai
-Future<bool> _waitAndTransitionToLive({
-  required String token,
-  required String broadcastId,
-  required String streamId,
-  required Map<String, String> headers,
-}) async {
-  // Max 2 minute wait karo (24 attempts x 5 seconds)
-  const maxAttempts = 24;
-  const waitDuration = Duration(seconds: 5);
-
-  for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-    print("Checking stream health (attempt $attempt/$maxAttempts)...");
-    await Future.delayed(waitDuration);
-
-    try {
-      // Stream ki health check karo
-      final healthRes = await http.get(
-        Uri.parse(
-            'https://youtube.googleapis.com/youtube/v3/liveStreams?part=status&id=$streamId'),
-        headers: headers,
-      );
-
-      if (healthRes.statusCode != 200) continue;
-
-      final healthData = jsonDecode(healthRes.body);
-      final items = healthData['items'] as List?;
-      if (items == null || items.isEmpty) continue;
-
-      final streamStatus = items[0]['status']['streamStatus'];
-      print("Stream status: $streamStatus");
-
-      // "active" matlab FFmpeg connected hai aur data aa raha hai
-      if (streamStatus == 'active') {
-        print("Stream is active! Transitioning broadcast to LIVE...");
-
-        final transitionRes = await http.post(
-          Uri.parse(
-              'https://youtube.googleapis.com/youtube/v3/liveBroadcasts/transition?broadcastStatus=live&id=$broadcastId&part=status'),
-          headers: headers,
-        );
-
-        if (transitionRes.statusCode == 200) {
-          print("Broadcast is now LIVE!");
-          return true;
-        } else {
-          print("Transition failed: ${transitionRes.body}");
-          return false;
-        }
-      }
-    } catch (e) {
-      print("Health check error (attempt $attempt): $e");
-    }
-  }
-
-  print("Timeout: Stream never became active in 2 minutes.");
-  return false;
-}
-
-// ─── THUMBNAIL HELPER (same as before) ───────────────────────────────────────
 Future<void> _uploadThumbnail({
   required String token,
   required String videoId,
@@ -251,10 +176,10 @@ Future<void> _uploadThumbnail({
     final mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
 
     if (imageBytes.length > 2 * 1024 * 1024) {
-      print("Warning: Thumbnail over 2MB, upload may fail.");
+      print("Warning: Thumbnail over 2MB, may fail.");
     }
 
-    final thumbnailRes = await http.post(
+    final res = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=$videoId&uploadType=media'),
       headers: {
@@ -265,11 +190,9 @@ Future<void> _uploadThumbnail({
       body: imageBytes,
     );
 
-    if (thumbnailRes.statusCode == 200) {
-      print("Thumbnail uploaded successfully.");
-    } else {
-      print("Thumbnail failed (non-fatal): ${thumbnailRes.body}");
-    }
+    print(res.statusCode == 200
+        ? "Thumbnail OK"
+        : "Thumbnail failed (non-fatal): ${res.body}");
   } catch (e) {
     print("Thumbnail error (non-fatal): $e");
   }
