@@ -70,8 +70,8 @@ Future<String?> setupYouTubeLiveEvent(
           "enableAutoStop": true,
           // ✅ Ye flag zaroori hai — bina iske YouTube DVR data store karta
           // hai aur transition mein delay aata hai
-          "enableDvr": false,
-          "recordFromStart": false,
+          // "enableDvr": false,
+          // "recordFromStart": false,
         }
       }),
     );
