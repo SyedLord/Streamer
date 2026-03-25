@@ -170,7 +170,7 @@ class _CreatorStudioHubCopyWidgetState
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: GoogleFonts.poppins(
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
@@ -340,7 +340,7 @@ class _CreatorStudioHubCopyWidgetState
                                       labelStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -431,7 +431,7 @@ class _CreatorStudioHubCopyWidgetState
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
@@ -475,7 +475,7 @@ class _CreatorStudioHubCopyWidgetState
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -535,7 +535,7 @@ class _CreatorStudioHubCopyWidgetState
                                       FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
@@ -558,7 +558,7 @@ class _CreatorStudioHubCopyWidgetState
                                   searchTextStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -579,7 +579,7 @@ class _CreatorStudioHubCopyWidgetState
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -734,8 +734,7 @@ class _CreatorStudioHubCopyWidgetState
                                 _model.categoryValue,
                                 '',
                               );
-                              if (_model.generatedKey != null &&
-                                  _model.generatedKey != '') {
+                              if (_model.generatedKey != null) {
                                 await Future.delayed(
                                   Duration(
                                     milliseconds: 5000,
@@ -744,12 +743,12 @@ class _CreatorStudioHubCopyWidgetState
                                 await actions.startFFmpegStream(
                                   FFAppState().selectedVideoPath,
                                   FFAppState().globalRtmp,
-                                  _model.generatedKey,
+                                  _model.generatedKey?.toString(),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      _model.generatedKey!,
+                                      _model.generatedKey!.toString(),
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -760,9 +759,6 @@ class _CreatorStudioHubCopyWidgetState
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-
-                                context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

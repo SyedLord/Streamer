@@ -12,7 +12,8 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:cross_file/cross_file.dart'; // Web/Mobile Safe Library
 
-Future<String?> setupYouTubeLiveEvent(
+Future<dynamic> setupYouTubeLiveEvent(
+  // String? ki jagah dynamic
   String? token,
   String? title,
   String? privacy,
@@ -128,9 +129,9 @@ Future<String?> setupYouTubeLiveEvent(
       return null;
     }
 
-    // Fauran chaabi (key) return karein taake FFmpeg shuru ho aur delay na aaye
-    print("SUCCESS! Stream key ready: $newStreamKey");
-    return newStreamKey;
+    // Fauran dono cheezein return karein (JSON format mein)
+    print("SUCCESS! Stream key and Video ID ready!");
+    return {"streamKey": newStreamKey, "videoId": broadcastId};
   } catch (e) {
     print("Unexpected error: $e");
     return null;

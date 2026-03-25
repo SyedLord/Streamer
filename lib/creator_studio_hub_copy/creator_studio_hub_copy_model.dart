@@ -30,7 +30,7 @@ class CreatorStudioHubCopyModel
   String? categoryValue;
   FormFieldController<String>? categoryValueController;
   // Stores action output result for [Custom Action - setupYouTubeLiveEvent] action in Button widget.
-  String? generatedKey;
+  dynamic generatedKey;
 
   @override
   void initState(BuildContext context) {

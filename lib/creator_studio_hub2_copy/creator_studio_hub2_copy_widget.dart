@@ -183,7 +183,7 @@ class _CreatorStudioHub2CopyWidgetState
                                         labelStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -274,7 +274,7 @@ class _CreatorStudioHub2CopyWidgetState
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -677,7 +677,7 @@ class _CreatorStudioHub2CopyWidgetState
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
-                                              font: GoogleFonts.interTight(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .titleSmall
@@ -756,7 +756,7 @@ class _CreatorStudioHub2CopyWidgetState
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -842,7 +842,7 @@ class _CreatorStudioHub2CopyWidgetState
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -998,8 +998,7 @@ class _CreatorStudioHub2CopyWidgetState
                                 _model.categoryValue,
                                 _model.localThumbnailPath,
                               );
-                              if (_model.generatedKey != null &&
-                                  _model.generatedKey != '') {
+                              if (_model.generatedKey != null) {
                                 await Future.delayed(
                                   Duration(
                                     milliseconds: 5000,
@@ -1008,25 +1007,24 @@ class _CreatorStudioHub2CopyWidgetState
                                 await actions.startFFmpegStream(
                                   FFAppState().selectedVideoPath,
                                   FFAppState().globalRtmp,
-                                  _model.generatedKey,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      _model.generatedKey!,
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 10000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
+                                  getJsonField(
+                                    _model.generatedKey,
+                                    r'''$.streamKey''',
+                                  ).toString(),
                                 );
 
                                 context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
+                                  LiveBroadcastModeWidget.routeName,
+                                  queryParameters: {
+                                    'liveVideoId': serializeParam(
+                                      getJsonField(
+                                        _model.generatedKey,
+                                        r'''$.videoId''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

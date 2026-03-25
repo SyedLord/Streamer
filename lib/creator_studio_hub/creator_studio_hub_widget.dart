@@ -168,7 +168,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     textStyle: FlutterFlowTheme.of(context)
                                         .titleSmall
                                         .override(
-                                          font: GoogleFonts.interTight(
+                                          font: GoogleFonts.poppins(
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .titleSmall
@@ -338,7 +338,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       labelStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -429,7 +429,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
-                                          font: GoogleFonts.inter(
+                                          font: GoogleFonts.poppins(
                                             fontWeight:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
@@ -473,7 +473,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -533,7 +533,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .labelMedium
@@ -556,7 +556,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   searchTextStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -577,7 +577,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium

@@ -182,7 +182,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                         labelStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
-                                              font: GoogleFonts.inter(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyMedium
@@ -273,7 +273,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            font: GoogleFonts.inter(
+                                            font: GoogleFonts.poppins(
                                               fontWeight:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
@@ -676,7 +676,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
-                                              font: GoogleFonts.interTight(
+                                              font: GoogleFonts.poppins(
                                                 fontWeight:
                                                     FlutterFlowTheme.of(context)
                                                         .titleSmall
@@ -755,7 +755,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -841,7 +841,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        font: GoogleFonts.inter(
+                                        font: GoogleFonts.poppins(
                                           fontWeight:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
@@ -997,8 +997,7 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                 _model.categoryValue,
                                 _model.localThumbnailPath,
                               );
-                              if (_model.generatedKey != null &&
-                                  _model.generatedKey != '') {
+                              if (_model.generatedKey != null) {
                                 await Future.delayed(
                                   Duration(
                                     milliseconds: 5000,
@@ -1007,12 +1006,12 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                 await actions.startFFmpegStream(
                                   FFAppState().selectedVideoPath,
                                   FFAppState().globalRtmp,
-                                  _model.generatedKey,
+                                  _model.generatedKey?.toString(),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      _model.generatedKey!,
+                                      _model.generatedKey!.toString(),
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -1023,9 +1022,6 @@ class _CreatorStudioHub2WidgetState extends State<CreatorStudioHub2Widget> {
                                         FlutterFlowTheme.of(context).secondary,
                                   ),
                                 );
-
-                                context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

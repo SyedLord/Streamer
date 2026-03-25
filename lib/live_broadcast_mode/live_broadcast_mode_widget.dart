@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_web_view.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,12 @@ import 'live_broadcast_mode_model.dart';
 export 'live_broadcast_mode_model.dart';
 
 class LiveBroadcastModeWidget extends StatefulWidget {
-  const LiveBroadcastModeWidget({super.key});
+  const LiveBroadcastModeWidget({
+    super.key,
+    required this.liveVideoId,
+  });
+
+  final String? liveVideoId;
 
   static String routeName = 'LiveBroadcastMode';
   static String routePath = '/liveBroadcastMode';
@@ -183,8 +189,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                           ),
                           child: FlutterFlowWebView(
                             content:
-                                'https://www.youtube.com/embed/live_stream?channel=UCLzdS2mshlCEPFV50vz_I0w&autoplay=1',
-                            bypass: false,
+                                'https://www.youtube.com/embed/${widget.liveVideoId}?autoplay=1&playsinline=1&modestbranding=1',
+                            bypass: true,
                             height: 500.0,
                             verticalScroll: false,
                             horizontalScroll: false,
@@ -766,72 +772,46 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                 alignment: AlignmentDirectional(0.0, 1.0),
                 child: Padding(
                   padding: EdgeInsets.all(24.0),
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
+                  child: FFButtonWidget(
+                    onPressed: () async {
                       await actions.stopFFmpegStream();
 
                       context.goNamed(CreatorStudioHub2CopyWidget.routeName);
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).error,
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        child: Stack(
-                          alignment: AlignmentDirectional(0.0, 0.0),
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.stop_rounded,
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  size: 16.0,
+                    text: 'STOP STREAMING',
+                    icon: Icon(
+                      Icons.stop,
+                      size: 15.0,
+                    ),
+                    options: FFButtonOptions(
+                      width: double.infinity,
+                      height: 60.0,
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primary,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                font: GoogleFonts.poppins(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleSmall
+                                      .fontStyle,
                                 ),
-                                Text(
-                                  'STOP STREAM',
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        font: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .fontStyle,
-                                        ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        fontSize: 12.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .labelMedium
-                                            .fontStyle,
-                                        lineHeight: 1.3,
-                                      ),
-                                ),
-                                Container(
-                                  width: 0.0,
-                                  height: 0.0,
-                                ),
-                              ].divide(SizedBox(width: 8.0)),
-                            ),
-                            Container(
-                              width: 0.0,
-                              height: 0.0,
-                            ),
-                          ],
-                        ),
-                      ),
+                                color: FlutterFlowTheme.of(context).primaryText,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .fontStyle,
+                              ),
+                      elevation: 0.0,
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
                 ),

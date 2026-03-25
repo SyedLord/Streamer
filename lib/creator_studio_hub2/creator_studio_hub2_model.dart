@@ -31,7 +31,7 @@ class CreatorStudioHub2Model extends FlutterFlowModel<CreatorStudioHub2Widget> {
   String? categoryValue;
   FormFieldController<String>? categoryValueController;
   // Stores action output result for [Custom Action - setupYouTubeLiveEvent] action in Button widget.
-  String? generatedKey;
+  dynamic generatedKey;
 
   @override
   void initState(BuildContext context) {
