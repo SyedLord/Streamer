@@ -66,10 +66,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
             r'''$.viewers''',
           ).toString();
           safeSetState(() {});
-          _model.liveTime = functions.incrementLiveTime(_model.liveTime);
-          safeSetState(() {});
           _model.instantTimer2 = InstantTimer.periodic(
-            duration: Duration(milliseconds: 2000),
+            duration: Duration(milliseconds: 1000),
             callback: (timer) async {
               _model.liveTime = functions.incrementLiveTime(_model.liveTime);
               safeSetState(() {});
@@ -882,6 +880,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         await actions.stopFFmpegStream();
+                        _model.instantTimer?.cancel();
 
                         context.goNamed(CreatorStudioHubWidget.routeName);
                       },
