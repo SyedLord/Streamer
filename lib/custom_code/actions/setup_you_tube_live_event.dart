@@ -17,6 +17,21 @@ Future<String?> setupYouTubeLiveEvent(
   String? categoryId,
   String? thumbnailPath,
 ) async {
+  // ─── TEMPORARY DEBUG — baad mein hata dena ────────────────────────────
+  print("=== PARAMETER CHECK ===");
+  print(
+      "Token: ${token == null ? 'NULL' : token.isEmpty ? 'EMPTY' : 'OK (${token.substring(0, 15)}...)'}");
+  print(
+      "Title: ${title == null ? 'NULL' : title.isEmpty ? 'EMPTY' : 'OK: $title'}");
+  print(
+      "Privacy: ${privacy == null ? 'NULL' : privacy.isEmpty ? 'EMPTY' : 'OK: $privacy'}");
+  print(
+      "CategoryId: ${categoryId == null ? 'NULL' : categoryId.isEmpty ? 'EMPTY' : 'OK: $categoryId'}");
+  print(
+      "ThumbnailPath: ${thumbnailPath == null ? 'NULL' : thumbnailPath.isEmpty ? 'EMPTY' : 'OK: $thumbnailPath'}");
+  print("=======================");
+  // ─────────────────────────────────────────────────────────────────────
+
   if (token == null ||
       token.isEmpty ||
       title == null ||
@@ -28,6 +43,7 @@ Future<String?> setupYouTubeLiveEvent(
     print("Error: Missing essential details.");
     return null;
   }
+  // ... baaki code same
 
   final headers = {
     'Authorization': 'Bearer $token',
