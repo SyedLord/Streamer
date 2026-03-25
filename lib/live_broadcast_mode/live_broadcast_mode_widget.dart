@@ -263,8 +263,22 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                       width: 10.0,
                                       height: 10.0,
                                       decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .success,
+                                        color: () {
+                                          if ((FFAppState().liveHealth ==
+                                                  'Excellent') ||
+                                              (FFAppState().liveHealth ==
+                                                  'Good')) {
+                                            return FlutterFlowTheme.of(context)
+                                                .success;
+                                          } else if (FFAppState().liveHealth ==
+                                              'Poor') {
+                                            return FlutterFlowTheme.of(context)
+                                                .warning;
+                                          } else {
+                                            return FlutterFlowTheme.of(context)
+                                                .error;
+                                          }
+                                        }(),
                                         borderRadius:
                                             BorderRadius.circular(9999.0),
                                       ),
@@ -281,8 +295,26 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                                       .labelMedium
                                                       .fontStyle,
                                             ),
-                                            color: FlutterFlowTheme.of(context)
-                                                .success,
+                                            color: () {
+                                              if ((FFAppState().liveHealth ==
+                                                      'Excellent') ||
+                                                  (FFAppState().liveHealth ==
+                                                      'Good')) {
+                                                return FlutterFlowTheme.of(
+                                                        context)
+                                                    .success;
+                                              } else if (FFAppState()
+                                                      .liveHealth ==
+                                                  'Poor') {
+                                                return FlutterFlowTheme.of(
+                                                        context)
+                                                    .warning;
+                                              } else {
+                                                return FlutterFlowTheme.of(
+                                                        context)
+                                                    .error;
+                                              }
+                                            }(),
                                             fontSize: 12.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.w600,
