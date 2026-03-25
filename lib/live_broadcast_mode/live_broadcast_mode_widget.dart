@@ -66,7 +66,6 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
             r'''$.viewers''',
           ).toString();
           safeSetState(() {});
-          _model.instantTimer?.cancel();
           _model.instantTimer2 = InstantTimer.periodic(
             duration: Duration(milliseconds: 1000),
             callback: (timer) async {
