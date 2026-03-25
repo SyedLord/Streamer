@@ -4,9 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_youtube_player.dart';
-import '/flutter_flow/instant_timer.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -45,37 +43,11 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.instantTimer = InstantTimer.periodic(
-        duration: Duration(milliseconds: 10000),
-        callback: (timer) async {
-          _model.youtubeFetchData = await actions.fetchLiveStreamStats(
-            FFAppState().youtubeAccessToken,
-            widget.liveVideoId!,
-            widget.liveStreamId!,
-          );
-          _model.liveTime = getJsonField(
-            _model.youtubeFetchData,
-            r'''$.duration''',
-          ).toString();
-          _model.liveHealth = getJsonField(
-            _model.youtubeFetchData,
-            r'''$.health''',
-          ).toString();
-          _model.liveViewers = getJsonField(
-            _model.youtubeFetchData,
-            r'''$.viewers''',
-          ).toString();
-          safeSetState(() {});
-          _model.instantTimer2 = InstantTimer.periodic(
-            duration: Duration(milliseconds: 1000),
-            callback: (timer) async {
-              _model.liveTime = functions.incrementLiveTime(_model.liveTime);
-              safeSetState(() {});
-            },
-            startImmediately: true,
-          );
-        },
-        startImmediately: false,
+      await actions.manageLiveDashboard(
+        'START',
+        FFAppState().youtubeAccessToken,
+        widget.liveVideoId,
+        widget.liveStreamId,
       );
     });
   }
@@ -172,7 +144,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                   ),
                                 ),
                                 Text(
-                                  _model.liveTime,
+                                  FFAppState().liveTime,
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
@@ -298,7 +270,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                       ),
                                     ),
                                     Text(
-                                      _model.liveHealth,
+                                      FFAppState().liveHealth,
                                       style: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .override(
@@ -641,7 +613,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         ].divide(SizedBox(width: 4.0)),
                                       ),
                                       Text(
-                                        _model.liveViewers,
+                                        FFAppState().liveViewers,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -880,7 +852,12 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         await actions.stopFFmpegStream();
-                        _model.instantTimer?.cancel();
+                        await actions.manageLiveDashboard(
+                          'STOP',
+                          '',
+                          '',
+                          '',
+                        );
 
                         context.goNamed(CreatorStudioHubWidget.routeName);
                       },

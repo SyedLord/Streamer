@@ -97,6 +97,24 @@ class FFAppState extends ChangeNotifier {
   set youtubeAccessToken(String value) {
     _youtubeAccessToken = value;
   }
+
+  String _liveTime = '00:00:00';
+  String get liveTime => _liveTime;
+  set liveTime(String value) {
+    _liveTime = value;
+  }
+
+  String _liveHealth = 'Checking...';
+  String get liveHealth => _liveHealth;
+  set liveHealth(String value) {
+    _liveHealth = value;
+  }
+
+  String _liveViewers = '0';
+  String get liveViewers => _liveViewers;
+  set liveViewers(String value) {
+    _liveViewers = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {
