@@ -1,14 +1,16 @@
-import '/components/health_indicator_widget.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_youtube_player.dart';
+import '/flutter_flow/instant_timer.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'live_broadcast_mode_model.dart';
 export 'live_broadcast_mode_model.dart';
 
@@ -16,9 +18,11 @@ class LiveBroadcastModeWidget extends StatefulWidget {
   const LiveBroadcastModeWidget({
     super.key,
     required this.liveVideoId,
+    required this.liveStreamId,
   });
 
   final String? liveVideoId;
+  final String? liveStreamId;
 
   static String routeName = 'LiveBroadcastMode';
   static String routePath = '/liveBroadcastMode';
@@ -37,6 +41,34 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => LiveBroadcastModeModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.instantTimer = InstantTimer.periodic(
+        duration: Duration(milliseconds: 10000),
+        callback: (timer) async {
+          _model.youtubeFetchData = await actions.fetchLiveStreamStats(
+            FFAppState().youtubeAccessToken,
+            widget.liveVideoId!,
+            widget.liveStreamId!,
+          );
+          _model.liveTime = getJsonField(
+            _model.youtubeFetchData,
+            r'''$.duration''',
+          ).toString();
+          _model.liveHealth = getJsonField(
+            _model.youtubeFetchData,
+            r'''$.health''',
+          ).toString();
+          _model.liveViewers = getJsonField(
+            _model.youtubeFetchData,
+            r'''$.viewers''',
+          ).toString();
+          safeSetState(() {});
+        },
+        startImmediately: true,
+      );
+    });
   }
 
   @override
@@ -48,6 +80,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return YoutubeFullScreenWrapper(
       child: Scaffold(
         key: scaffoldKey,
@@ -129,7 +163,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                   ),
                                 ),
                                 Text(
-                                  '00:05:30',
+                                  _model.liveTime,
                                   style: FlutterFlowTheme.of(context)
                                       .titleMedium
                                       .override(
@@ -239,10 +273,46 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         lineHeight: 1.4,
                                       ),
                                 ),
-                                wrapWithModel(
-                                  model: _model.healthIndicatorModel,
-                                  updateCallback: () => safeSetState(() {}),
-                                  child: HealthIndicatorWidget(),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 10.0,
+                                      height: 10.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .success,
+                                        borderRadius:
+                                            BorderRadius.circular(9999.0),
+                                      ),
+                                    ),
+                                    Text(
+                                      _model.liveHealth,
+                                      style: FlutterFlowTheme.of(context)
+                                          .labelMedium
+                                          .override(
+                                            font: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: FlutterFlowTheme.of(context)
+                                                .success,
+                                            fontSize: 12.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .fontStyle,
+                                            lineHeight: 1.3,
+                                          ),
+                                    ),
+                                  ].divide(SizedBox(width: 8.0)),
                                 ),
                               ],
                             ),
@@ -562,7 +632,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         ].divide(SizedBox(width: 4.0)),
                                       ),
                                       Text(
-                                        '1,240',
+                                        _model.liveViewers,
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(

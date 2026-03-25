@@ -48,6 +48,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               'liveVideoId',
               ParamType.String,
             ),
+            liveStreamId: params.getParam(
+              'liveStreamId',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(

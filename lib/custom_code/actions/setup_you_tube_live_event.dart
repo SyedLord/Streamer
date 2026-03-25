@@ -131,7 +131,11 @@ Future<dynamic> setupYouTubeLiveEvent(
 
     // Fauran dono cheezein return karein (JSON format mein)
     print("SUCCESS! Stream key and Video ID ready!");
-    return {"streamKey": newStreamKey, "videoId": broadcastId};
+    return {
+      "streamKey": newStreamKey,
+      "videoId": broadcastId,
+      "streamId": streamId
+    };
   } catch (e) {
     print("Unexpected error: $e");
     return null;

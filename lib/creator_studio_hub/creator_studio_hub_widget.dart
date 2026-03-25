@@ -1021,6 +1021,13 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       ).toString(),
                                       ParamType.String,
                                     ),
+                                    'liveStreamId': serializeParam(
+                                      getJsonField(
+                                        _model.generatedKey,
+                                        r'''$.streamId''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
                                   }.withoutNulls,
                                 );
                               } else {

@@ -1,22 +1,29 @@
-import '/components/health_indicator_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/instant_timer.dart';
 import '/index.dart';
 import 'live_broadcast_mode_widget.dart' show LiveBroadcastModeWidget;
 import 'package:flutter/material.dart';
 
 class LiveBroadcastModeModel extends FlutterFlowModel<LiveBroadcastModeWidget> {
+  ///  Local state fields for this page.
+
+  String liveTime = '00:00:00';
+
+  String liveHealth = 'Connecting...';
+
+  String liveViewers = '0';
+
   ///  State fields for stateful widgets in this page.
 
-  // Model for health_indicator component.
-  late HealthIndicatorModel healthIndicatorModel;
+  InstantTimer? instantTimer;
+  // Stores action output result for [Custom Action - fetchLiveStreamStats] action in LiveBroadcastMode widget.
+  dynamic youtubeFetchData;
 
   @override
-  void initState(BuildContext context) {
-    healthIndicatorModel = createModel(context, () => HealthIndicatorModel());
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {
-    healthIndicatorModel.dispose();
+    instantTimer?.cancel();
   }
 }
