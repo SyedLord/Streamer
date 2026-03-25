@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+// Naye imports
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:cross_file/cross_file.dart'; // Web/Mobile Safe Library
 
 Future<String?> setupYouTubeLiveEvent(
   String? token,
@@ -17,19 +19,6 @@ Future<String?> setupYouTubeLiveEvent(
   String? categoryId,
   String? thumbnailPath,
 ) async {
-  print("=== PARAMETER CHECK ===");
-  print(
-      "Token: ${token == null ? 'NULL' : token.isEmpty ? 'EMPTY' : 'OK (${token.substring(0, 15)}...)'}");
-  print(
-      "Title: ${title == null ? 'NULL' : title.isEmpty ? 'EMPTY' : 'OK: $title'}");
-  print(
-      "Privacy: ${privacy == null ? 'NULL' : privacy.isEmpty ? 'EMPTY' : 'OK: $privacy'}");
-  print(
-      "CategoryId: ${categoryId == null ? 'NULL' : categoryId.isEmpty ? 'EMPTY' : 'OK: $categoryId'}");
-  print(
-      "ThumbnailPath: ${thumbnailPath == null ? 'NULL' : thumbnailPath.isEmpty ? 'EMPTY' : 'OK: $thumbnailPath'}");
-  print("=======================");
-
   if (token == null ||
       token.isEmpty ||
       title == null ||
@@ -38,7 +27,7 @@ Future<String?> setupYouTubeLiveEvent(
       privacy.isEmpty ||
       categoryId == null ||
       categoryId.isEmpty) {
-    print("Error: Missing essential details.");
+    print("Error: Missing essential details for YouTube stream.");
     return null;
   }
 
@@ -49,8 +38,8 @@ Future<String?> setupYouTubeLiveEvent(
   };
 
   try {
-    // ─── STEP 1: Broadcast banao ───────────────────────────────────────────
-    print("1. Creating Broadcast...");
+    // ─── STEP 1: Create Broadcast ───────
+    print("1. Creating Broadcast (Title: $title)...");
     final broadcastRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet,status,contentDetails'),
@@ -64,22 +53,23 @@ Future<String?> setupYouTubeLiveEvent(
         "status": {"privacyStatus": privacy},
         "contentDetails": {
           "enableAutoStart": true,
-          "enableAutoStop": true,
+          "enableAutoStop": true
+          // DVR aur RecordFromStart hata diye gaye hain taake channel error na de
         }
       }),
     );
 
     if (broadcastRes.statusCode != 200) {
-      print("Broadcast failed: ${broadcastRes.body}");
+      print("Broadcast API Error: ${broadcastRes.body}");
       return null;
     }
 
-    final broadcastId = jsonDecode(broadcastRes.body)['id'];
-    print("Broadcast ID: $broadcastId");
+    final broadcastData = jsonDecode(broadcastRes.body);
+    final broadcastId = broadcastData['id'];
 
-    // ─── STEP 2: Category set karo ────────────────────────────────────────
-    print("2. Setting category: $categoryId...");
-    final categoryRes = await http.put(
+    // ─── STEP 2: Set Category ID ──────────────────────────
+    print("2. Setting Category ID ($categoryId)...");
+    await http.put(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/videos?part=snippet'),
       headers: headers,
@@ -93,26 +83,18 @@ Future<String?> setupYouTubeLiveEvent(
       }),
     );
 
-    if (categoryRes.statusCode != 200) {
-      print("Category failed (non-fatal): ${categoryRes.body}");
-    } else {
-      print("Category OK");
-    }
-
-    // ─── STEP 3: Thumbnail ─────────────────────────────────────────────────
+    // ─── STEP 3: Upload Thumbnail (Agar select ki gayi hai) ────────────────
     if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
-      print("3. Uploading thumbnail...");
+      print("3. Uploading Thumbnail...");
       await _uploadThumbnail(
           token: token, videoId: broadcastId, thumbnailPath: thumbnailPath);
-    } else {
-      print("3. No thumbnail, skipping.");
     }
 
-    // ─── STEP 4: Stream key banao ──────────────────────────────────────────
-    print("4. Generating stream key...");
+    // ─── STEP 4: Generate New Stream Key ──────────────────────────────────
+    print("4. Generating New Stream Key...");
     final streamRes = await http.post(
       Uri.parse(
-          'https://youtube.googleapis.com/youtube/v3/liveStreams?part=snippet,cdn,status'),
+          'https://youtube.googleapis.com/youtube/v3/liveStreams?part=snippet,cdn'),
       headers: headers,
       body: jsonEncode({
         "snippet": {"title": "$title - Stream"},
@@ -125,17 +107,16 @@ Future<String?> setupYouTubeLiveEvent(
     );
 
     if (streamRes.statusCode != 200) {
-      print("Stream key failed: ${streamRes.body}");
+      print("Stream Key Error: ${streamRes.body}");
       return null;
     }
 
     final streamData = jsonDecode(streamRes.body);
-    final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
     final streamId = streamData['id'];
-    print("Stream key OK: $newStreamKey");
+    final newStreamKey = streamData['cdn']['ingestionInfo']['streamName'];
 
-    // ─── STEP 5: Bind karo ─────────────────────────────────────────────────
-    print("5. Binding...");
+    // ─── STEP 5: Bind Stream to Broadcast ─────────────────────────────────
+    print("5. Binding Stream to Broadcast...");
     final bindRes = await http.post(
       Uri.parse(
           'https://youtube.googleapis.com/youtube/v3/liveBroadcasts/bind?id=$broadcastId&part=id&streamId=$streamId'),
@@ -143,45 +124,37 @@ Future<String?> setupYouTubeLiveEvent(
     );
 
     if (bindRes.statusCode != 200) {
-      print("Bind failed: ${bindRes.body}");
+      print("Bind Error: ${bindRes.body}");
       return null;
     }
 
-    // ─── STEP 6: HATA DIYA ─────────────────────────────────────────────────
-    // _waitAndTransitionToLive hata diya — enableAutoStart khud handle karta hai
-    // FFmpeg connect hoga toh YouTube auto live kar dega
-
-    print("SUCCESS! Returning stream key.");
+    // Fauran chaabi (key) return karein taake FFmpeg shuru ho aur delay na aaye
+    print("SUCCESS! Stream key ready: $newStreamKey");
     return newStreamKey;
   } catch (e) {
-    print("Exception: $e");
+    print("Unexpected error: $e");
     return null;
   }
 }
 
+// ─── THUMBNAIL UPLOAD HELPER FUNCTION ──────────────────────────
 Future<void> _uploadThumbnail({
   required String token,
   required String videoId,
   required String thumbnailPath,
 }) async {
   try {
-    final imageFile = File(thumbnailPath);
-    if (!await imageFile.exists()) {
-      print("Thumbnail not found: $thumbnailPath");
-      return;
-    }
+    final imageFile = XFile(thumbnailPath);
+    final Uint8List imageBytes = await imageFile.readAsBytes();
 
-    final imageBytes = await imageFile.readAsBytes();
-    final extension = thumbnailPath.split('.').last.toLowerCase();
-    final mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
+    final String extension = thumbnailPath.split('.').last.toLowerCase();
+    final String mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
 
-    if (imageBytes.length > 2 * 1024 * 1024) {
-      print("Warning: Thumbnail over 2MB, may fail.");
-    }
+    final uploadUri = Uri.parse(
+        'https://youtube.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=$videoId&uploadType=media');
 
-    final res = await http.post(
-      Uri.parse(
-          'https://youtube.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=$videoId&uploadType=media'),
+    final thumbnailRes = await http.post(
+      uploadUri,
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': mimeType,
@@ -190,12 +163,12 @@ Future<void> _uploadThumbnail({
       body: imageBytes,
     );
 
-    print(res.statusCode == 200
-        ? "Thumbnail OK"
-        : "Thumbnail failed (non-fatal): ${res.body}");
+    if (thumbnailRes.statusCode == 200) {
+      print("Thumbnail uploaded successfully.");
+    } else {
+      print("Thumbnail failed: ${thumbnailRes.body}");
+    }
   } catch (e) {
-    print("Thumbnail error (non-fatal): $e");
+    print("Thumbnail error: $e");
   }
 }
-// Set your action name, define your arguments and return parameter,
-// and then add the boilerplate code using the green button on the right!
