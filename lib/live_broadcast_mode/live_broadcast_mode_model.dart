@@ -18,6 +18,7 @@ class LiveBroadcastModeModel extends FlutterFlowModel<LiveBroadcastModeWidget> {
   InstantTimer? instantTimer;
   // Stores action output result for [Custom Action - fetchLiveStreamStats] action in LiveBroadcastMode widget.
   dynamic youtubeFetchData;
+  InstantTimer? instantTimer2;
 
   @override
   void initState(BuildContext context) {}
@@ -25,5 +26,6 @@ class LiveBroadcastModeModel extends FlutterFlowModel<LiveBroadcastModeWidget> {
   @override
   void dispose() {
     instantTimer?.cancel();
+    instantTimer2?.cancel();
   }
 }

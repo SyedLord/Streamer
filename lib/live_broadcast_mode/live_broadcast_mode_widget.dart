@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_youtube_player.dart';
 import '/flutter_flow/instant_timer.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -65,6 +66,15 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
             r'''$.viewers''',
           ).toString();
           safeSetState(() {});
+          _model.instantTimer?.cancel();
+          _model.instantTimer2 = InstantTimer.periodic(
+            duration: Duration(milliseconds: 1000),
+            callback: (timer) async {
+              _model.liveTime = functions.incrementLiveTime(_model.liveTime);
+              safeSetState(() {});
+            },
+            startImmediately: true,
+          );
         },
         startImmediately: true,
       );
