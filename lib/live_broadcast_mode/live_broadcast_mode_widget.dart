@@ -189,11 +189,11 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                           ),
                           child: FlutterFlowWebView(
                             content:
-                                'https://www.youtube.com/embed/${widget.liveVideoId}?autoplay=1&playsinline=1&modestbranding=1',
-                            bypass: true,
+                                '<!DOCTYPE html> <html> <head>     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\">     <meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">     <style>body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #000; overflow: hidden; }</style> </head> <body>     <iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/${widget.liveVideoId}?autoplay=1&playsinline=1&modestbranding=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe> </body> </html>',
                             height: 500.0,
                             verticalScroll: false,
                             horizontalScroll: false,
+                            html: true,
                           ),
                         ),
                       ),
