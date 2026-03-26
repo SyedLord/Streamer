@@ -374,7 +374,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                               ),
                                         ),
                                         Text(
-                                          '11.2 Mbps',
+                                          FFAppState().liveBitrate.toString(),
                                           style: FlutterFlowTheme.of(context)
                                               .labelSmall
                                               .override(
@@ -406,8 +406,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                       child: FlutterFlowLineChart(
                                         data: [
                                           FFLineChartData(
-                                            xData: ([0, 1, 2, 3]),
-                                            yData: ([1, 2, 3, 4]),
+                                            xData: FFAppState().bitrateXData,
+                                            yData: FFAppState().bitrateHistory,
                                             settings: LineChartBarData(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -432,6 +432,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                           minY: 0.0,
                                           maxY: 14.399999999999999,
                                         ),
+                                        xLabels: FFAppState().bitrateLabels,
                                         xAxisLabelInfo: AxisLabelInfo(
                                           showLabels: true,
                                           labelTextStyle: TextStyle(
