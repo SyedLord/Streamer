@@ -44,9 +44,9 @@ Future startFFmpegStream(
   // 🛠️ FIX 2: Nayi stream shuru hone se pehle purana graph data zero/khaali karein
   FFAppState().update(() {
     FFAppState().streamSecondsCounter = 0;
-    FFAppState().bitrateHistory = [];
-    FFAppState().bitrateLabels = [];
-    FFAppState().bitrateXData = [];
+    FFAppState().bitrateHistory = [0.0]; // [] ki jagah [0.0]
+    FFAppState().bitrateLabels = ["0s"]; // [] ki jagah ["0s"]
+    FFAppState().bitrateXData = [0]; // [] ki jagah [0]
   });
 
   FFmpegKit.executeAsync(command,

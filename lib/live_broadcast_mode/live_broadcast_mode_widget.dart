@@ -516,7 +516,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         ].divide(SizedBox(width: 4.0)),
                                       ),
                                       Text(
-                                        '11.2 Mbps',
+                                        FFAppState().liveBitrate.toString(),
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
