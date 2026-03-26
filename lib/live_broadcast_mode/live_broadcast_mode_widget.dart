@@ -14,14 +14,7 @@ import 'live_broadcast_mode_model.dart';
 export 'live_broadcast_mode_model.dart';
 
 class LiveBroadcastModeWidget extends StatefulWidget {
-  const LiveBroadcastModeWidget({
-    super.key,
-    required this.liveVideoId,
-    required this.liveStreamId,
-  });
-
-  final String? liveVideoId;
-  final String? liveStreamId;
+  const LiveBroadcastModeWidget({super.key});
 
   static String routeName = 'LiveBroadcastMode';
   static String routePath = '/liveBroadcastMode';
@@ -46,8 +39,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
       await actions.manageLiveDashboard(
         'START',
         FFAppState().youtubeAccessToken,
-        widget.liveVideoId,
-        widget.liveStreamId,
+        FFAppState().currentVideoId,
+        FFAppState().currentStreamId,
       );
     });
   }
@@ -209,7 +202,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                             ),
                             child: FlutterFlowYoutubePlayer(
                               url:
-                                  'https://www.youtube.com/embed/${widget.liveVideoId}?autoplay=1&playsinline=1&modestbranding=1',
+                                  'https://www.youtube.com/embed/${FFAppState().currentVideoId}?autoplay=1&playsinline=1&modestbranding=1',
                               width: double.infinity,
                               height: 500.0,
                               autoPlay: false,

@@ -1010,6 +1010,35 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     r'''$.streamKey''',
                                   ).toString(),
                                 );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'VideoID; ${getJsonField(
+                                        _model.generatedKey,
+                                        r'''$.videoId''',
+                                      ).toString()}StreamID; ${getJsonField(
+                                        _model.generatedKey,
+                                        r'''$.streamId''',
+                                      ).toString()}',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 8100),
+                                    backgroundColor:
+                                        FlutterFlowTheme.of(context).secondary,
+                                  ),
+                                );
+                                FFAppState().currentVideoId = getJsonField(
+                                  _model.generatedKey,
+                                  r'''$.videoId''',
+                                ).toString();
+                                FFAppState().currentStreamId = getJsonField(
+                                  _model.generatedKey,
+                                  r'''$.streamId''',
+                                ).toString();
+                                safeSetState(() {});
                                 await Future.delayed(
                                   Duration(
                                     milliseconds: 200,
@@ -1017,24 +1046,7 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 );
 
                                 context.pushNamed(
-                                  LiveBroadcastModeWidget.routeName,
-                                  queryParameters: {
-                                    'liveVideoId': serializeParam(
-                                      getJsonField(
-                                        _model.generatedKey,
-                                        r'''$.videoId''',
-                                      ).toString(),
-                                      ParamType.String,
-                                    ),
-                                    'liveStreamId': serializeParam(
-                                      getJsonField(
-                                        _model.generatedKey,
-                                        r'''$.streamId''',
-                                      ).toString(),
-                                      ParamType.String,
-                                    ),
-                                  }.withoutNulls,
-                                );
+                                    LiveBroadcastModeWidget.routeName);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

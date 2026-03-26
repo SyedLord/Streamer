@@ -214,6 +214,18 @@ class FFAppState extends ChangeNotifier {
   void insertAtIndexInBitrateXData(int index, int value) {
     bitrateXData.insert(index, value);
   }
+
+  String _currentVideoId = '';
+  String get currentVideoId => _currentVideoId;
+  set currentVideoId(String value) {
+    _currentVideoId = value;
+  }
+
+  String _currentStreamId = '';
+  String get currentStreamId => _currentStreamId;
+  set currentStreamId(String value) {
+    _currentStreamId = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

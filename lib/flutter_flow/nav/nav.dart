@@ -43,16 +43,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: LiveBroadcastModeWidget.routeName,
           path: LiveBroadcastModeWidget.routePath,
-          builder: (context, params) => LiveBroadcastModeWidget(
-            liveVideoId: params.getParam(
-              'liveVideoId',
-              ParamType.String,
-            ),
-            liveStreamId: params.getParam(
-              'liveStreamId',
-              ParamType.String,
-            ),
-          ),
+          builder: (context, params) => LiveBroadcastModeWidget(),
         ),
         FFRoute(
           name: LoginScreenWidget.routeName,
