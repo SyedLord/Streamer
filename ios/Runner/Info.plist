@@ -45,6 +45,8 @@
 
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>Permission Required</string>
+	<key>PermissionGroupNotification</key>
+    <string>Permission Required</string>
 
 
 
