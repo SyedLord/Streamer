@@ -115,6 +115,105 @@ class FFAppState extends ChangeNotifier {
   set liveViewers(String value) {
     _liveViewers = value;
   }
+
+  double _liveBitrate = 0.0;
+  double get liveBitrate => _liveBitrate;
+  set liveBitrate(double value) {
+    _liveBitrate = value;
+  }
+
+  List<double> _bitrateHistory = [];
+  List<double> get bitrateHistory => _bitrateHistory;
+  set bitrateHistory(List<double> value) {
+    _bitrateHistory = value;
+  }
+
+  void addToBitrateHistory(double value) {
+    bitrateHistory.add(value);
+  }
+
+  void removeFromBitrateHistory(double value) {
+    bitrateHistory.remove(value);
+  }
+
+  void removeAtIndexFromBitrateHistory(int index) {
+    bitrateHistory.removeAt(index);
+  }
+
+  void updateBitrateHistoryAtIndex(
+    int index,
+    double Function(double) updateFn,
+  ) {
+    bitrateHistory[index] = updateFn(_bitrateHistory[index]);
+  }
+
+  void insertAtIndexInBitrateHistory(int index, double value) {
+    bitrateHistory.insert(index, value);
+  }
+
+  int _streamSecondsCounter = 0;
+  int get streamSecondsCounter => _streamSecondsCounter;
+  set streamSecondsCounter(int value) {
+    _streamSecondsCounter = value;
+  }
+
+  List<String> _bitrateLabels = [];
+  List<String> get bitrateLabels => _bitrateLabels;
+  set bitrateLabels(List<String> value) {
+    _bitrateLabels = value;
+  }
+
+  void addToBitrateLabels(String value) {
+    bitrateLabels.add(value);
+  }
+
+  void removeFromBitrateLabels(String value) {
+    bitrateLabels.remove(value);
+  }
+
+  void removeAtIndexFromBitrateLabels(int index) {
+    bitrateLabels.removeAt(index);
+  }
+
+  void updateBitrateLabelsAtIndex(
+    int index,
+    String Function(String) updateFn,
+  ) {
+    bitrateLabels[index] = updateFn(_bitrateLabels[index]);
+  }
+
+  void insertAtIndexInBitrateLabels(int index, String value) {
+    bitrateLabels.insert(index, value);
+  }
+
+  List<int> _bitrateXData = [];
+  List<int> get bitrateXData => _bitrateXData;
+  set bitrateXData(List<int> value) {
+    _bitrateXData = value;
+  }
+
+  void addToBitrateXData(int value) {
+    bitrateXData.add(value);
+  }
+
+  void removeFromBitrateXData(int value) {
+    bitrateXData.remove(value);
+  }
+
+  void removeAtIndexFromBitrateXData(int index) {
+    bitrateXData.removeAt(index);
+  }
+
+  void updateBitrateXDataAtIndex(
+    int index,
+    int Function(int) updateFn,
+  ) {
+    bitrateXData[index] = updateFn(_bitrateXData[index]);
+  }
+
+  void insertAtIndexInBitrateXData(int index, int value) {
+    bitrateXData.insert(index, value);
+  }
 }
 
 void _safeInit(Function() initializeField) {
