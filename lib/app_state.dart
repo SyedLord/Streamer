@@ -122,7 +122,7 @@ class FFAppState extends ChangeNotifier {
     _liveBitrate = value;
   }
 
-  List<double> _bitrateHistory = [];
+  List<double> _bitrateHistory = [0.0];
   List<double> get bitrateHistory => _bitrateHistory;
   set bitrateHistory(List<double> value) {
     _bitrateHistory = value;
@@ -157,7 +157,7 @@ class FFAppState extends ChangeNotifier {
     _streamSecondsCounter = value;
   }
 
-  List<String> _bitrateLabels = [];
+  List<String> _bitrateLabels = ['0s'];
   List<String> get bitrateLabels => _bitrateLabels;
   set bitrateLabels(List<String> value) {
     _bitrateLabels = value;
@@ -186,7 +186,7 @@ class FFAppState extends ChangeNotifier {
     bitrateLabels.insert(index, value);
   }
 
-  List<int> _bitrateXData = [];
+  List<int> _bitrateXData = [0];
   List<int> get bitrateXData => _bitrateXData;
   set bitrateXData(List<int> value) {
     _bitrateXData = value;
