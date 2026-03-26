@@ -880,6 +880,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                         );
                         FFAppState().isStreamLive = false;
                         safeSetState(() {});
+                        await actions.stopBackgroundService();
 
                         context.goNamed(CreatorStudioHubWidget.routeName);
                       },

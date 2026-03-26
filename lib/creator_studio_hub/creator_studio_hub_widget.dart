@@ -1420,6 +1420,9 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       milliseconds: 5000,
                                     ),
                                   );
+                                  await actions.startBackgroundService(
+                                    _model.videoTitleTextController.text,
+                                  );
                                   await actions.startFFmpegStream(
                                     FFAppState().selectedVideoPath,
                                     FFAppState().globalRtmp,

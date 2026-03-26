@@ -9,3 +9,5 @@ export 'pick_safe_video_path2.dart' show pickSafeVideoPath2;
 export 'transition_to_live.dart' show transitionToLive;
 export 'fetch_live_stream_stats.dart' show fetchLiveStreamStats;
 export 'manage_live_dashboard.dart' show manageLiveDashboard;
+export 'start_background_service.dart' show startBackgroundService;
+export 'stop_background_service.dart' show stopBackgroundService;
