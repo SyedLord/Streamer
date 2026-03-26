@@ -105,8 +105,8 @@ Future startFFmpegStream(
         final labels = List<String>.from(FFAppState().bitrateLabels)
           ..add(timeLabel);
 
-        // 4. Sirf aakhri 10 items rakhein (Sliding Window)
-        if (history.length > 10) {
+        // 4. Sirf aakhri 5 items rakhein (Sliding Window)
+        if (history.length > 5) {
           history.removeAt(0);
           labels.removeAt(0);
         }
