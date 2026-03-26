@@ -450,6 +450,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         ],
                                         chartStylingInfo: ChartStylingInfo(
                                           backgroundColor: Colors.transparent,
+                                          showGrid: true,
                                           showBorder: false,
                                         ),
                                         axisBounds: AxisBounds(
