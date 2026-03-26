@@ -64,6 +64,23 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
           top: true,
           child: Stack(
             children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    context.pop();
+                  },
+                  child: Icon(
+                    Icons.chevron_left_outlined,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 24.0,
+                  ),
+                ),
+              ),
               Container(
                 child: Padding(
                   padding: EdgeInsets.all(24.0),
@@ -74,109 +91,116 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFD32F2F),
-                                    borderRadius: BorderRadius.circular(9999.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12.0, 6.0, 12.0, 6.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 8.0,
-                                          height: 8.0,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(9999.0),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 5.0, 0.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFD32F2F),
+                                      borderRadius:
+                                          BorderRadius.circular(9999.0),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          12.0, 6.0, 12.0, 6.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 8.0,
+                                            height: 8.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(9999.0),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          'LIVE',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelLarge
-                                              .override(
-                                                font: GoogleFonts.poppins(
+                                          Text(
+                                            'LIVE',
+                                            style: FlutterFlowTheme.of(context)
+                                                .labelLarge
+                                                .override(
+                                                  font: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w900,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .labelLarge
+                                                            .fontStyle,
+                                                  ),
+                                                  color: Colors.white,
+                                                  fontSize: 14.0,
+                                                  letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w900,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .labelLarge
                                                           .fontStyle,
+                                                  lineHeight: 1.3,
                                                 ),
-                                                color: Colors.white,
-                                                fontSize: 14.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w900,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelLarge
-                                                        .fontStyle,
-                                                lineHeight: 1.3,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(width: 6.0)),
+                                          ),
+                                        ].divide(SizedBox(width: 6.0)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  FFAppState().liveTime,
-                                  style: FlutterFlowTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        font: GoogleFonts.poppins(
+                                  Text(
+                                    FFAppState().liveTime,
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleMedium
+                                        .override(
+                                          font: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .titleMedium
+                                                    .fontStyle,
+                                          ),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          fontSize: 16.0,
+                                          letterSpacing: 0.0,
                                           fontWeight: FontWeight.w600,
                                           fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .titleMedium
                                                   .fontStyle,
+                                          lineHeight: 1.4,
                                         ),
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                        fontSize: 16.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.w600,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .titleMedium
-                                            .fontStyle,
-                                        lineHeight: 1.4,
-                                      ),
-                                ),
-                              ].divide(SizedBox(width: 16.0)),
-                            ),
-                            FlutterFlowIconButton(
-                              borderRadius: 9999.0,
-                              buttonSize: 40.0,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              icon: Icon(
-                                Icons.share_rounded,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                size: 24.0,
+                                  ),
+                                ].divide(SizedBox(width: 16.0)),
                               ),
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
-                            ),
-                          ],
+                              FlutterFlowIconButton(
+                                borderRadius: 9999.0,
+                                buttonSize: 40.0,
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                                icon: Icon(
+                                  Icons.share_rounded,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 24.0,
+                                ),
+                                onPressed: () {
+                                  print('IconButton pressed ...');
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(24.0),
