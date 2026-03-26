@@ -33,12 +33,32 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       navigatorKey: appNavigatorKey,
-      errorBuilder: (context, state) => LoginScreenWidget(),
+      errorBuilder: (context, state) => appStateNotifier.showSplashImage
+          ? Builder(
+              builder: (context) => Container(
+                color: Colors.transparent,
+                child: Image.asset(
+                  'assets/images/1773697695016.png',
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+            )
+          : LoginScreenWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => LoginScreenWidget(),
+          builder: (context, _) => appStateNotifier.showSplashImage
+              ? Builder(
+                  builder: (context) => Container(
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/1773697695016.png',
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                )
+              : LoginScreenWidget(),
         ),
         FFRoute(
           name: LiveBroadcastModeWidget.routeName,

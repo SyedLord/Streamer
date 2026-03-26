@@ -1420,8 +1420,24 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       milliseconds: 5000,
                                     ),
                                   );
-                                  await actions.startBackgroundService(
+                                  _model.foreground =
+                                      await actions.startBackgroundService(
                                     _model.videoTitleTextController.text,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        _model.foreground!.toString(),
+                                        style: TextStyle(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondary,
+                                    ),
                                   );
                                   await actions.startFFmpegStream(
                                     FFAppState().selectedVideoPath,
