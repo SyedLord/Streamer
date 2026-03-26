@@ -1010,6 +1010,11 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     r'''$.streamKey''',
                                   ).toString(),
                                 );
+                                await Future.delayed(
+                                  Duration(
+                                    milliseconds: 200,
+                                  ),
+                                );
 
                                 context.pushNamed(
                                   LiveBroadcastModeWidget.routeName,

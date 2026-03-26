@@ -7,11 +7,17 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart';
-// 🛠️ FIX 1: Import ko theek kar diya (_new laga diya)
 import 'package:ffmpeg_kit_flutter_new/statistics.dart';
+
+// Claude ki batayi hui local variables
+DateTime _lastStatUpdate = DateTime.fromMillisecondsSinceEpoch(0);
+int _localSecondsCounter = 0;
 
 Future startFFmpegStream(
   String? videoPath,
@@ -19,18 +25,16 @@ Future startFFmpegStream(
   String? streamKey,
 ) async {
   if (videoPath == null || streamUrl == null || streamKey == null) {
-    print("Error: Missing Data for Stream");
+    print("Error: Missing Data");
     return;
   }
 
   String fullRtmpUrl = "$streamUrl/$streamKey";
   String inputPath = videoPath;
 
-  // content:// URI ko FFmpeg ki samajh mein translate karo
   if (videoPath.startsWith('content://')) {
     inputPath =
         await FFmpegKitConfig.getSafParameterForRead(videoPath) ?? videoPath;
-    print("SAF translated path: $inputPath");
   }
 
   String command = "-re -i \"$inputPath\" "
@@ -39,9 +43,7 @@ Future startFFmpegStream(
       "-g 60 -c:a aac -b:a 128k -ar 44100 "
       "-f flv \"$fullRtmpUrl\"";
 
-  print("Starting stream: $command");
-
-  // 🛠️ FIX 2: Nayi stream shuru hone se pehle purana graph data zero/khaali karein
+  // Nayi stream par state clear karna
   FFAppState().update(() {
     FFAppState().streamSecondsCounter = 0;
     FFAppState().bitrateHistory = [];
@@ -49,76 +51,62 @@ Future startFFmpegStream(
     FFAppState().bitrateXData = [];
   });
 
-  FFmpegKit.executeAsync(command,
-      // 1. Complete Callback (Jab stream band ho)
+  _localSecondsCounter = 0;
+
+  FFmpegKit.executeAsync(
+      command,
       (session) async {
-    final returnCode = await session.getReturnCode();
-    if (ReturnCode.isSuccess(returnCode)) {
-      print("SUCCESS: Stream finished.");
-    } else if (ReturnCode.isCancel(returnCode)) {
-      print("CANCELLED: Stream stopped.");
-    } else {
-      print("ERROR: Stream failed with code $returnCode.");
-    }
-  },
-      // 2. Log Callback (Errors aur details ke liye)
-      (log) {
-    // print("FFmpeg Log: ${log.getMessage()}");
-  },
-      // 3. STATISTICS CALLBACK (THE SLIDING WINDOW MAGIC)
+        final returnCode = await session.getReturnCode();
+        if (ReturnCode.isSuccess(returnCode)) {
+          print("SUCCESS: Stream finished.");
+        } else {
+          print("Stream ended with code $returnCode.");
+        }
+      },
+      (log) {},
       (statistics) {
-    try {
-      double rawBitrate = statistics.getBitrate();
+        try {
+          // 🟢 THROTTLE: Har 1 second mein sirf ek dafa andar aane do
+          final now = DateTime.now();
+          if (now.difference(_lastStatUpdate).inMilliseconds < 1000) return;
+          _lastStatUpdate = now;
 
-      if (rawBitrate > 0) {
-        double mbps = rawBitrate / 1000.0;
-        double roundedMbps = double.parse(mbps.toStringAsFixed(1));
+          double rawBitrate = statistics.getBitrate();
+          if (rawBitrate <= 0) return;
 
-        FFAppState().update(() {
-          // Bitrate update
-          FFAppState().liveBitrate = roundedMbps;
+          double mbps = double.parse((rawBitrate / 1000.0).toStringAsFixed(1));
 
-          // 1. Time counter barhayein
-          FFAppState().streamSecondsCounter += 1;
-          int currentSec = FFAppState().streamSecondsCounter;
+          _localSecondsCounter += 1;
+          int currentSec = _localSecondsCounter;
+          String timeLabel = currentSec < 60
+              ? "${currentSec}s"
+              : "${currentSec ~/ 60}m${currentSec % 60}s";
 
-          // 2. Format banayein (e.g., 61s -> "1m1s")
-          String timeLabel = "";
-          if (currentSec < 60) {
-            timeLabel = "${currentSec}s";
-          } else {
-            int m = currentSec ~/ 60; // Minutes nikalne ke liye
-            int s = currentSec % 60; // Baqi bache seconds
-            timeLabel = "${m}m${s}s";
-          }
+          // 🟢 Ek hi update call mein sab kuch karna
+          final history = List<double>.from(FFAppState().bitrateHistory)
+            ..add(mbps);
+          final labels = List<String>.from(FFAppState().bitrateLabels)
+            ..add(timeLabel);
+          final xData = List<int>.from(FFAppState().bitrateXData)
+            ..add(currentSec);
 
-          // 3. Teeno lists fetch karein
-          List<double> history = FFAppState().bitrateHistory;
-          List<String> labels = FFAppState().bitrateLabels;
-          List<int> xData = FFAppState().bitrateXData;
-
-          // Naya data add karein
-          history.add(roundedMbps);
-          labels.add(timeLabel);
-          xData.add(currentSec);
-
-          // 4. Sirf aakhri 9 items rakhein (Sliding Window)
           if (history.length > 9) {
             history.removeAt(0);
             labels.removeAt(0);
             xData.removeAt(0);
           }
 
-          // Wapas save karein
-          FFAppState().bitrateHistory = history;
-          FFAppState().bitrateLabels = labels;
-          FFAppState().bitrateXData = xData;
-        });
-      }
-    } catch (e) {
-      print("Stats update error: $e");
-    }
-  });
+          FFAppState().update(() {
+            FFAppState().liveBitrate = mbps;
+            FFAppState().streamSecondsCounter = currentSec;
+            FFAppState().bitrateHistory = history;
+            FFAppState().bitrateLabels = labels;
+            FFAppState().bitrateXData = xData;
+          });
+        } catch (e) {
+          print("Stats update error: $e");
+        }
+      });
 }
 // Set your action name, define your arguments and return parameter,
 // and then add the boilerplate code using the green button on the right!

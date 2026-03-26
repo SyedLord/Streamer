@@ -16,8 +16,8 @@ export 'live_broadcast_mode_model.dart';
 class LiveBroadcastModeWidget extends StatefulWidget {
   const LiveBroadcastModeWidget({
     super.key,
-    this.liveVideoId,
-    this.liveStreamId,
+    required this.liveVideoId,
+    required this.liveStreamId,
   });
 
   final String? liveVideoId;
