@@ -1,4 +1,3 @@
-import '/components/status_badge_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
@@ -12,8 +11,6 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
 
   ///  State fields for stateful widgets in this page.
 
-  // Model for status_badge component.
-  late StatusBadgeModel statusBadgeModel;
   // State field(s) for VideoTitle widget.
   FocusNode? videoTitleFocusNode;
   TextEditingController? videoTitleTextController;
@@ -34,13 +31,10 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   dynamic generatedKey;
 
   @override
-  void initState(BuildContext context) {
-    statusBadgeModel = createModel(context, () => StatusBadgeModel());
-  }
+  void initState(BuildContext context) {}
 
   @override
   void dispose() {
-    statusBadgeModel.dispose();
     videoTitleFocusNode?.dispose();
     videoTitleTextController?.dispose();
   }
