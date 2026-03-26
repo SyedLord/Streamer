@@ -374,7 +374,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                               ),
                                         ),
                                         Text(
-                                          FFAppState().liveBitrate.toString(),
+                                          '${FFAppState().liveBitrate.toString()} Mbps',
                                           style: FlutterFlowTheme.of(context)
                                               .labelSmall
                                               .override(
@@ -517,7 +517,7 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                         ].divide(SizedBox(width: 4.0)),
                                       ),
                                       Text(
-                                        FFAppState().liveBitrate.toString(),
+                                        '${FFAppState().liveBitrate.toString()} Mbps',
                                         style: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(

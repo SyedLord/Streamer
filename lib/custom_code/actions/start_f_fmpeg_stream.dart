@@ -10,8 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart';
-// 🛠️ FIX 1: Import ko theek kar diya (_new laga diya)
 import 'package:ffmpeg_kit_flutter_new/statistics.dart';
+
+// 🟢 CLAUDE'S OPTIMIZATION: Throttle ke liye local variables
+DateTime _lastStatUpdate = DateTime.fromMillisecondsSinceEpoch(0);
+int _localSecondsCounter = 0;
 
 Future startFFmpegStream(
   String? videoPath,
@@ -41,13 +44,16 @@ Future startFFmpegStream(
 
   print("Starting stream: $command");
 
-  // 🛠️ FIX 2: Nayi stream shuru hone se pehle purana graph data zero/khaali karein
+  // 🛠️ THE CRASH FIX: Nayi stream shuru hone se pehle purana graph zero karein
   FFAppState().update(() {
     FFAppState().streamSecondsCounter = 0;
-    FFAppState().bitrateHistory = [0.0]; // [] ki jagah [0.0]
-    FFAppState().bitrateLabels = ["0s"]; // [] ki jagah ["0s"]
-    FFAppState().bitrateXData = [0]; // [] ki jagah [0]
+    FFAppState().bitrateHistory = [0.0];
+    FFAppState().bitrateLabels = ["0s"];
+    FFAppState().bitrateXData = [0];
   });
+
+  // Reset local counter
+  _localSecondsCounter = 0;
 
   FFmpegKit.executeAsync(command,
       // 1. Complete Callback (Jab stream band ho)
@@ -61,55 +67,57 @@ Future startFFmpegStream(
       print("ERROR: Stream failed with code $returnCode.");
     }
   },
-      // 2. Log Callback (Errors aur details ke liye)
+      // 2. Log Callback
       (log) {
     // print("FFmpeg Log: ${log.getMessage()}");
   },
-      // 3. STATISTICS CALLBACK (THE SLIDING WINDOW MAGIC)
+      // 3. STATISTICS CALLBACK (THE SLIDING WINDOW + THROTTLE MAGIC)
       (statistics) {
     try {
+      // 🟢 THROTTLE FIX: Har 1 second mein sirf ek dafa andar aane do
+      final now = DateTime.now();
+      if (now.difference(_lastStatUpdate).inMilliseconds < 1000) return;
+      _lastStatUpdate = now;
+
       double rawBitrate = statistics.getBitrate();
 
       if (rawBitrate > 0) {
         double mbps = rawBitrate / 1000.0;
         double roundedMbps = double.parse(mbps.toStringAsFixed(1));
 
+        // 1. Time counter barhayein (Local Variable use kiya, faster hai)
+        _localSecondsCounter += 1;
+        int currentSec = _localSecondsCounter;
+
+        // 2. Format banayein (e.g., 61s -> "1m1s")
+        String timeLabel = "";
+        if (currentSec < 60) {
+          timeLabel = "${currentSec}s";
+        } else {
+          int m = currentSec ~/ 60; // Minutes nikalne ke liye
+          int s = currentSec % 60; // Baqi bache seconds
+          timeLabel = "${m}m${s}s";
+        }
+
+        // 🟢 Ek hi list step mein merge karein (Claude Optimization)
+        final history = List<double>.from(FFAppState().bitrateHistory)
+          ..add(roundedMbps);
+        final labels = List<String>.from(FFAppState().bitrateLabels)
+          ..add(timeLabel);
+
+        // 4. Sirf aakhri 10 items rakhein (Sliding Window)
+        if (history.length > 10) {
+          history.removeAt(0);
+          labels.removeAt(0);
+        }
+
+        // 🌟 THE LABEL FIX: X-Data ko aage mat bhagao, hamesha lock rakho (0, 1, 2... 9)
+        final xData = List<int>.generate(history.length, (index) => index);
+
+        // Ek sath App State update karein
         FFAppState().update(() {
-          // Bitrate update
           FFAppState().liveBitrate = roundedMbps;
-
-          // 1. Time counter barhayein
-          FFAppState().streamSecondsCounter += 1;
-          int currentSec = FFAppState().streamSecondsCounter;
-
-          // 2. Format banayein (e.g., 61s -> "1m1s")
-          String timeLabel = "";
-          if (currentSec < 60) {
-            timeLabel = "${currentSec}s";
-          } else {
-            int m = currentSec ~/ 60; // Minutes nikalne ke liye
-            int s = currentSec % 60; // Baqi bache seconds
-            timeLabel = "${m}m${s}s";
-          }
-
-          // 3. Teeno lists fetch karein
-          List<double> history = FFAppState().bitrateHistory;
-          List<String> labels = FFAppState().bitrateLabels;
-          List<int> xData = FFAppState().bitrateXData;
-
-          // Naya data add karein
-          history.add(roundedMbps);
-          labels.add(timeLabel);
-          xData.add(currentSec);
-
-          // 4. Sirf aakhri 9 items rakhein (Sliding Window)
-          if (history.length > 9) {
-            history.removeAt(0);
-            labels.removeAt(0);
-            xData.removeAt(0);
-          }
-
-          // Wapas save karein
+          FFAppState().streamSecondsCounter = currentSec;
           FFAppState().bitrateHistory = history;
           FFAppState().bitrateLabels = labels;
           FFAppState().bitrateXData = xData;
