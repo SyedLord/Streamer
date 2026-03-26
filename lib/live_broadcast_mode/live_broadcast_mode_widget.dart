@@ -406,8 +406,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                       child: FlutterFlowLineChart(
                                         data: [
                                           FFLineChartData(
-                                            xData: FFAppState().bitrateXData,
-                                            yData: FFAppState().bitrateHistory,
+                                            xData: ([0, 1, 2, 3]),
+                                            yData: ([1, 2, 3, 4]),
                                             settings: LineChartBarData(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -432,7 +432,6 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                           minY: 0.0,
                                           maxY: 14.399999999999999,
                                         ),
-                                        xLabels: FFAppState().bitrateLabels,
                                         xAxisLabelInfo: AxisLabelInfo(
                                           showLabels: true,
                                           labelTextStyle: TextStyle(
