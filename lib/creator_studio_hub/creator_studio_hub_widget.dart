@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:webviewx_plus/webviewx_plus.dart';
 import 'creator_studio_hub_model.dart';
 export 'creator_studio_hub_model.dart';
 
@@ -177,65 +178,171 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                           ),
                         ],
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 2.0,
-                              color: Color(0x1A000000),
-                              offset: Offset(
-                                0.0,
-                                1.0,
-                              ),
-                              spreadRadius: 0.0,
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(24.0),
-                          border: Border.all(
-                            color: FlutterFlowTheme.of(context).divider,
-                            width: 1.0,
+                      if (FFAppState().isStreamLive == true)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 2.0,
+                                color: Color(0x1A000000),
+                                offset: Offset(
+                                  0.0,
+                                  1.0,
+                                ),
+                                spreadRadius: 0.0,
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(24.0),
+                            border: Border.all(
+                              color: FlutterFlowTheme.of(context).divider,
+                              width: 1.0,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed(
+                                        LiveBroadcastModeWidget.routeName);
+                                  },
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        width: 44.0,
-                                        height: 44.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
-                                        ),
-                                        alignment:
-                                            AlignmentDirectional(0.0, 0.0),
-                                        child: Icon(
-                                          Icons.broadcast_on_home_rounded,
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          size: 24.0,
-                                        ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 44.0,
+                                            height: 44.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                            ),
+                                            alignment:
+                                                AlignmentDirectional(0.0, 0.0),
+                                            child: Icon(
+                                              Icons.broadcast_on_home_rounded,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Manage Active Stream',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
+                                                    .override(
+                                                      font: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontStyle,
+                                                      ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                      fontSize: 16.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .titleMedium
+                                                              .fontStyle,
+                                                      lineHeight: 1.4,
+                                                    ),
+                                              ),
+                                              Text(
+                                                'Reconnect or monitor current session',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodySmall
+                                                    .override(
+                                                      font: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontStyle,
+                                                      ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondaryText,
+                                                      fontSize: 12.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      fontStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodySmall
+                                                              .fontStyle,
+                                                      lineHeight: 1.4,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ].divide(SizedBox(width: 16.0)),
                                       ),
-                                      Column(
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 16.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  color: FlutterFlowTheme.of(context).divider,
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -243,141 +350,109 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Manage Active Stream',
+                                            'Status',
                                             style: FlutterFlowTheme.of(context)
-                                                .titleMedium
+                                                .labelSmall
                                                 .override(
                                                   font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
-                                                            .titleMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMedium
-                                                          .fontStyle,
-                                                  lineHeight: 1.4,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Reconnect or monitor current session',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
-                                                  font: GoogleFonts.inter(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodySmall
+                                                            .labelSmall
                                                             .fontStyle,
                                                   ),
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .secondaryText,
-                                                  fontSize: 12.0,
+                                                  fontSize: 10.0,
                                                   letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodySmall
-                                                          .fontStyle,
-                                                  lineHeight: 1.4,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ].divide(SizedBox(width: 16.0)),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    size: 16.0,
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                color: FlutterFlowTheme.of(context).divider,
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Status',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelSmall
-                                              .override(
-                                                font: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .labelSmall
                                                           .fontStyle,
+                                                  lineHeight: 1.2,
                                                 ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                fontSize: 10.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelSmall
-                                                        .fontStyle,
-                                                lineHeight: 1.2,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 8.0,
+                                                height: 8.0,
+                                                decoration: BoxDecoration(
+                                                  color: () {
+                                                    if ((FFAppState()
+                                                                .liveHealth ==
+                                                            'Excellent') ||
+                                                        (FFAppState()
+                                                                .liveHealth ==
+                                                            'Good')) {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .success;
+                                                    } else if (FFAppState()
+                                                            .liveHealth ==
+                                                        'Poor') {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .warning;
+                                                    } else {
+                                                      return FlutterFlowTheme
+                                                              .of(context)
+                                                          .error;
+                                                    }
+                                                  }(),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          9999.0),
+                                                ),
                                               ),
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 8.0,
-                                              height: 8.0,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .success,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        9999.0),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Session Ready',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .labelMedium
-                                                  .override(
-                                                    font: GoogleFonts.poppins(
+                                              Text(
+                                                FFAppState().liveHealth,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .labelMedium
+                                                    .override(
+                                                      font: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelMedium
+                                                                .fontStyle,
+                                                      ),
+                                                      color: () {
+                                                        if ((FFAppState()
+                                                                    .liveHealth ==
+                                                                'Excellent') ||
+                                                            (FFAppState()
+                                                                    .liveHealth ==
+                                                                'Good')) {
+                                                          return FlutterFlowTheme
+                                                                  .of(context)
+                                                              .success;
+                                                        } else if (FFAppState()
+                                                                .liveHealth ==
+                                                            'Poor') {
+                                                          return FlutterFlowTheme
+                                                                  .of(context)
+                                                              .warning;
+                                                        } else {
+                                                          return FlutterFlowTheme
+                                                                  .of(context)
+                                                              .error;
+                                                        }
+                                                      }(),
+                                                      fontSize: 12.0,
+                                                      letterSpacing: 0.0,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       fontStyle:
@@ -385,96 +460,86 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                                                   context)
                                                               .labelMedium
                                                               .fontStyle,
+                                                      lineHeight: 1.3,
                                                     ),
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .success,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
+                                              ),
+                                            ].divide(SizedBox(width: 4.0)),
+                                          ),
+                                        ].divide(SizedBox(height: 4.0)),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Last Active',
+                                            style: FlutterFlowTheme.of(context)
+                                                .labelSmall
+                                                .override(
+                                                  font: GoogleFonts.poppins(
                                                     fontWeight: FontWeight.w600,
                                                     fontStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
-                                                            .labelMedium
+                                                            .labelSmall
                                                             .fontStyle,
-                                                    lineHeight: 1.3,
                                                   ),
-                                            ),
-                                          ].divide(SizedBox(width: 4.0)),
-                                        ),
-                                      ].divide(SizedBox(height: 4.0)),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Last Active',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelSmall
-                                              .override(
-                                                font: GoogleFonts.poppins(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                  fontSize: 10.0,
+                                                  letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .labelSmall
                                                           .fontStyle,
+                                                  lineHeight: 1.2,
                                                 ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryText,
-                                                fontSize: 10.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelSmall
-                                                        .fontStyle,
-                                                lineHeight: 1.2,
-                                              ),
-                                        ),
-                                        Text(
-                                          '2 mins ago',
-                                          style: FlutterFlowTheme.of(context)
-                                              .labelMedium
-                                              .override(
-                                                font: GoogleFonts.poppins(
+                                          ),
+                                          Text(
+                                            FFAppState().liveTime,
+                                            style: FlutterFlowTheme.of(context)
+                                                .labelMedium
+                                                .override(
+                                                  font: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .labelMedium
+                                                            .fontStyle,
+                                                  ),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primaryText,
+                                                  fontSize: 12.0,
+                                                  letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
                                                   fontStyle:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .labelMedium
                                                           .fontStyle,
+                                                  lineHeight: 1.3,
                                                 ),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                fontSize: 12.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .fontStyle,
-                                                lineHeight: 1.3,
-                                              ),
-                                        ),
-                                      ].divide(SizedBox(height: 4.0)),
+                                          ),
+                                        ].divide(SizedBox(height: 4.0)),
+                                      ),
                                     ),
-                                  ),
-                                ].divide(SizedBox(width: 16.0)),
-                              ),
-                            ].divide(SizedBox(height: 16.0)),
+                                  ].divide(SizedBox(width: 16.0)),
+                                ),
+                              ].divide(SizedBox(height: 16.0)),
+                            ),
                           ),
                         ),
-                      ),
                       Container(
                         width: MediaQuery.sizeOf(context).width * 1.0,
                         decoration: BoxDecoration(),
@@ -1319,71 +1384,112 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            if (FFAppState().selectedVideoPath != '') {
-                              _model.generatedKey =
-                                  await actions.setupYouTubeLiveEvent(
-                                FFAppState().youtubeAccessToken,
-                                _model.videoTitleTextController.text,
-                                _model.privacyValue,
-                                _model.categoryValue,
-                                _model.localThumbnailPath,
-                              );
-                              if (_model.generatedKey != null) {
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 5000,
-                                  ),
-                                );
-                                await actions.startFFmpegStream(
-                                  FFAppState().selectedVideoPath,
-                                  FFAppState().globalRtmp,
-                                  getJsonField(
-                                    _model.generatedKey,
-                                    r'''$.streamKey''',
-                                  ).toString(),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'VideoID; ${getJsonField(
-                                        _model.generatedKey,
-                                        r'''$.videoId''',
-                                      ).toString()}StreamID; ${getJsonField(
-                                        _model.generatedKey,
-                                        r'''$.streamId''',
-                                      ).toString()}',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
+                            if (FFAppState().isStreamLive == true) {
+                              await showDialog(
+                                context: context,
+                                builder: (alertDialogContext) {
+                                  return WebViewAware(
+                                    child: AlertDialog(
+                                      title: Text('Alert !'),
+                                      content: Text(
+                                          'A livestream is currently ongoing. Stop it to continue.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(alertDialogContext),
+                                          child: Text('Ok'),
+                                        ),
+                                      ],
                                     ),
-                                    duration: Duration(milliseconds: 8100),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).secondary,
-                                  ),
+                                  );
+                                },
+                              );
+                            } else {
+                              if (FFAppState().selectedVideoPath != '') {
+                                _model.generatedKey =
+                                    await actions.setupYouTubeLiveEvent(
+                                  FFAppState().youtubeAccessToken,
+                                  _model.videoTitleTextController.text,
+                                  _model.privacyValue,
+                                  _model.categoryValue,
+                                  _model.localThumbnailPath,
                                 );
-                                FFAppState().currentVideoId = getJsonField(
-                                  _model.generatedKey,
-                                  r'''$.videoId''',
-                                ).toString();
-                                FFAppState().currentStreamId = getJsonField(
-                                  _model.generatedKey,
-                                  r'''$.streamId''',
-                                ).toString();
-                                safeSetState(() {});
-                                await Future.delayed(
-                                  Duration(
-                                    milliseconds: 200,
-                                  ),
-                                );
+                                if (_model.generatedKey != null) {
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 5000,
+                                    ),
+                                  );
+                                  await actions.startFFmpegStream(
+                                    FFAppState().selectedVideoPath,
+                                    FFAppState().globalRtmp,
+                                    getJsonField(
+                                      _model.generatedKey,
+                                      r'''$.streamKey''',
+                                    ).toString(),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'VideoID; ${getJsonField(
+                                          _model.generatedKey,
+                                          r'''$.videoId''',
+                                        ).toString()}StreamID; ${getJsonField(
+                                          _model.generatedKey,
+                                          r'''$.streamId''',
+                                        ).toString()}',
+                                        style: TextStyle(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 8100),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context)
+                                              .secondary,
+                                    ),
+                                  );
+                                  FFAppState().currentVideoId = getJsonField(
+                                    _model.generatedKey,
+                                    r'''$.videoId''',
+                                  ).toString();
+                                  FFAppState().currentStreamId = getJsonField(
+                                    _model.generatedKey,
+                                    r'''$.streamId''',
+                                  ).toString();
+                                  FFAppState().isStreamLive = true;
+                                  safeSetState(() {});
+                                  await Future.delayed(
+                                    Duration(
+                                      milliseconds: 200,
+                                    ),
+                                  );
 
-                                context.pushNamed(
-                                    LiveBroadcastModeWidget.routeName);
+                                  context.pushNamed(
+                                      LiveBroadcastModeWidget.routeName);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Stream Key not Generated!',
+                                        style: TextStyle(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                      ),
+                                      duration: Duration(milliseconds: 4000),
+                                      backgroundColor:
+                                          FlutterFlowTheme.of(context).error,
+                                    ),
+                                  );
+                                  FFAppState().isStreamLive = false;
+                                  safeSetState(() {});
+                                }
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Stream Key not Generated!',
+                                      'Select the Video !',
                                       style: TextStyle(
                                         color: FlutterFlowTheme.of(context)
                                             .primaryText,
@@ -1395,21 +1501,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   ),
                                 );
                               }
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Select the Video !',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 4000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).error,
-                                ),
-                              );
                             }
 
                             safeSetState(() {});
@@ -1427,7 +1518,9 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                             iconPadding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
                             iconColor: FlutterFlowTheme.of(context).primaryText,
-                            color: FlutterFlowTheme.of(context).primary,
+                            color: FFAppState().isStreamLive == true
+                                ? Color(0x99D32F2F)
+                                : FlutterFlowTheme.of(context).primary,
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(

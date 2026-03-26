@@ -35,6 +35,9 @@ class FFAppState extends ChangeNotifier {
     _safeInit(() {
       _channelName = prefs.getString('ff_channelName') ?? _channelName;
     });
+    _safeInit(() {
+      _isStreamLive = prefs.getBool('ff_isStreamLive') ?? _isStreamLive;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -225,6 +228,13 @@ class FFAppState extends ChangeNotifier {
   String get currentStreamId => _currentStreamId;
   set currentStreamId(String value) {
     _currentStreamId = value;
+  }
+
+  bool _isStreamLive = false;
+  bool get isStreamLive => _isStreamLive;
+  set isStreamLive(bool value) {
+    _isStreamLive = value;
+    prefs.setBool('ff_isStreamLive', value);
   }
 }
 

@@ -853,6 +853,8 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                           '',
                           '',
                         );
+                        FFAppState().isStreamLive = false;
+                        safeSetState(() {});
 
                         context.goNamed(CreatorStudioHubWidget.routeName);
                       },
