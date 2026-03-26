@@ -18,7 +18,10 @@ Future<bool> startBackgroundService(String streamTitle) async {
     final androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: "🔴 Live: $finalTitle",
       notificationText: "Tap here to open app and manage stream.",
-      notificationImportance: AndroidNotificationImportance.Default,
+
+      // 🌟 THE FIX: 'Default' ko badal kar 'normal' kar diya gaya hai
+      notificationImportance: AndroidNotificationImportance.normal,
+
       notificationIcon: AndroidResource(
           name: 'ic_launcher', defType: 'mipmap'), // Aapki app ka icon
     );
