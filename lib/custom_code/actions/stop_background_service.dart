@@ -8,14 +8,38 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> stopBackgroundService() async {
   try {
-    // Check karein ke service chal bhi rahi hai ya nahi
+    // FFmpeg band karo
+    await FFmpegKit.cancel();
+
+    // Notification dismiss karo
+    await flutterLocalNotificationsPlugin.cancel(888);
+
+    // Foreground service band karo
     if (FlutterBackground.isBackgroundExecutionEnabled) {
       await FlutterBackground.disableBackgroundExecution();
-      print("Background Service and Notification Stopped.");
     }
+
+    // App State reset karo
+    FFAppState().update(() {
+      FFAppState().liveBitrate = 0.0;
+      FFAppState().streamSecondsCounter = 0;
+      FFAppState().bitrateHistory = [0.0];
+      FFAppState().bitrateLabels = ["0s"];
+      FFAppState().bitrateXData = [0];
+      FFAppState().currentVideoId = '';
+      FFAppState().currentStreamId = '';
+      FFAppState().isStreamLive = false;
+    });
+
+    print("✅ Stream stopped, notification dismissed.");
   } catch (e) {
     print("Stop Background Error: $e");
   }

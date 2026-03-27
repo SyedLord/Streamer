@@ -8,33 +8,83 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<bool> startBackgroundService(String streamTitle) async {
   try {
-    // Agar title khaali aaye toh default naam set karein
     String finalTitle =
         streamTitle.isNotEmpty ? streamTitle : "SyedLord Gaming Live";
 
+    // ─── STEP 1: Foreground service start karo ────────────────────────────
     final androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: "🔴 Live: $finalTitle",
-      notificationText: "Tap here to open app and manage stream.",
-
-      // 🌟 THE FIX: 'Default' ko badal kar 'normal' kar diya gaya hai
-      notificationImportance: AndroidNotificationImportance.normal,
-
+      notificationText: "Streaming to YouTube...",
+      notificationImportance: AndroidNotificationImportance.high,
       notificationIcon: AndroidResource(
-          name: 'ic_launcher', defType: 'mipmap'), // Aapki app ka icon
+        name: 'ic_launcher',
+        defType: 'mipmap',
+      ),
     );
 
-    // Permission aur initialization check karein
     bool initialized =
         await FlutterBackground.initialize(androidConfig: androidConfig);
-
-    if (initialized) {
-      // Notification screen par layen aur app ko background mein zinda rakhein
-      return await FlutterBackground.enableBackgroundExecution();
+    if (!initialized) {
+      print("Background service initialize nahi hua.");
+      return false;
     }
-    return false;
+
+    bool enabled = await FlutterBackground.enableBackgroundExecution();
+    if (!enabled) {
+      print("Background service enable nahi hua.");
+      return false;
+    }
+
+    // ─── STEP 2: Notification initialize karo ─────────────────────────────
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(android: androidSettings),
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        if (response.actionId == 'stop_stream') {
+          print("User ne notification se stream stop kiya.");
+          // stopBackgroundService action call hoga
+          await stopBackgroundService();
+        }
+      },
+    );
+
+    // ─── STEP 3: Stop button wali notification show karo ──────────────────
+    await flutterLocalNotificationsPlugin.show(
+      888,
+      '🔴 Live: $finalTitle',
+      'Streaming to YouTube...',
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'stream_channel',
+          'Live Stream Controls',
+          channelDescription: 'Controls for your live stream',
+          importance: Importance.high,
+          priority: Priority.high,
+          ongoing: true,
+          autoCancel: false,
+          actions: [
+            AndroidNotificationAction(
+              'stop_stream',
+              '⏹ Stop Stream',
+              cancelNotification: true,
+              showsUserInterface: false,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    print("✅ Notification with Stop button active.");
+    return true;
   } catch (e) {
     print("Background Service Error: $e");
     return false;
