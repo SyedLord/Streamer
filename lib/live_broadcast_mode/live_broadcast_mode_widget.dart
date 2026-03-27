@@ -4,6 +4,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/flutter_flow_youtube_player.dart';
+import '/flutter_flow/instant_timer.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
@@ -36,22 +37,21 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (FFAppState().isStreamLive == true) {
-        await actions.manageLiveDashboard(
-          'START',
-          FFAppState().youtubeAccessToken,
-          FFAppState().currentVideoId,
-          FFAppState().currentStreamId,
-        );
-      } else {
-        context.goNamed(CreatorStudioHubWidget.routeName);
-
-        await actions.showNativeAlert(
-          'Broadcast Ended',
-          'Livestream has been Ended.',
-          'Ok',
-        );
-      }
+      await actions.manageLiveDashboard(
+        'START',
+        FFAppState().youtubeAccessToken,
+        FFAppState().currentVideoId,
+        FFAppState().currentStreamId,
+      );
+      _model.LiveStreamCounter = InstantTimer.periodic(
+        duration: Duration(milliseconds: 2000),
+        callback: (timer) async {
+          if (FFAppState().isStreamLive == false) {
+            context.goNamed(CreatorStudioHubWidget.routeName);
+          }
+        },
+        startImmediately: false,
+      );
     });
   }
 
@@ -140,7 +140,9 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                                             ),
                                           ),
                                           Text(
-                                            'LIVE',
+                                            FFAppState().isStreamLive == true
+                                                ? 'Live'
+                                                : 'Stop',
                                             style: FlutterFlowTheme.of(context)
                                                 .labelLarge
                                                 .override(
@@ -895,9 +897,9 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                             '',
                             '',
                           );
+                          await actions.stopBackgroundService();
                           FFAppState().isStreamLive = false;
                           safeSetState(() {});
-                          await actions.stopBackgroundService();
 
                           context.goNamed(CreatorStudioHubWidget.routeName);
                         }
