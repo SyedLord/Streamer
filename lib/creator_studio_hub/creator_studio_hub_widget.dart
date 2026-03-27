@@ -1424,21 +1424,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       await actions.startBackgroundService(
                                     _model.videoTitleTextController.text,
                                   );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        _model.foreground!.toString(),
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
-                                  );
                                   await actions.startFFmpegStream(
                                     FFAppState().selectedVideoPath,
                                     FFAppState().globalRtmp,
@@ -1446,27 +1431,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       _model.generatedKey,
                                       r'''$.streamKey''',
                                     ).toString(),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'VideoID; ${getJsonField(
-                                          _model.generatedKey,
-                                          r'''$.videoId''',
-                                        ).toString()}StreamID; ${getJsonField(
-                                          _model.generatedKey,
-                                          r'''$.streamId''',
-                                        ).toString()}',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 8100),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context)
-                                              .secondary,
-                                    ),
                                   );
                                   FFAppState().currentVideoId = getJsonField(
                                     _model.generatedKey,
@@ -1483,6 +1447,13 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                       milliseconds: 200,
                                     ),
                                   );
+                                  _model.localThumbnailPath = '';
+                                  safeSetState(() {});
+                                  FFAppState().selectedVideoPath = '';
+                                  safeSetState(() {});
+                                  safeSetState(() {
+                                    _model.videoTitleTextController?.clear();
+                                  });
 
                                   context.pushNamed(
                                       LiveBroadcastModeWidget.routeName);

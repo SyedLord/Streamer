@@ -36,8 +36,7 @@ Future startFFmpegStream(
     print("SAF translated path: $inputPath");
   }
 
-  // 🌟 THE FIX: Hardware Encoder (h264_mediacodec)
-  // Yeh background mein frame drop nahi hone dega
+  // 🌟 AAPKI ORIGINAL SETTING: Hardware Encoder (h264_mediacodec) at 6800k
   String command = "-re -i \"$inputPath\" "
       "-c:v h264_mediacodec "
       "-b:v 6800k "
@@ -47,7 +46,7 @@ Future startFFmpegStream(
 
   print("Starting stream: $command");
 
-  // 🛠️ THE CRASH FIX: Nayi stream shuru hone se pehle purana graph zero karein
+  // Nayi stream shuru hone se pehle purana graph zero karein
   FFAppState().update(() {
     FFAppState().streamSecondsCounter = 0;
     FFAppState().bitrateHistory = [0.0];
@@ -59,22 +58,40 @@ Future startFFmpegStream(
   _localSecondsCounter = 0;
 
   FFmpegKit.executeAsync(command,
-      // 1. Complete Callback (Jab stream band ho)
+      // 🌟 THE FIX 2: Complete Callback (Auto-Kill & Slate Reset)
       (session) async {
     final returnCode = await session.getReturnCode();
+
     if (ReturnCode.isSuccess(returnCode)) {
-      print("SUCCESS: Stream finished.");
+      print("SUCCESS: Stream finished naturally.");
     } else if (ReturnCode.isCancel(returnCode)) {
-      print("CANCELLED: Stream stopped.");
+      print("CANCELLED: Stream stopped by user.");
     } else {
       print("ERROR: Stream failed with code $returnCode.");
     }
+
+    // 🧹 SLATE SAAF KAREIN (State Reset)
+    // Jab stream ruk jaye, toh app ko wapas normal state mein le aayen
+    FFAppState().update(() {
+      FFAppState().isStreamLive =
+          false; // Yeh Start button ko wapas on kar dega
+      FFAppState().liveBitrate = 0.0;
+      FFAppState().streamSecondsCounter = 0;
+      FFAppState().bitrateHistory = [0.0];
+      FFAppState().bitrateLabels = ["0s"];
+      FFAppState().bitrateXData = [0];
+      FFAppState().currentVideoId = '';
+      FFAppState().currentStreamId = '';
+    });
+
+    // 🛑 Background Service (Notification) ko bhi automatically band karein
+    await stopBackgroundService();
   },
-      // 2. Log Callback
+      // Log Callback
       (log) {
     // print("FFmpeg Log: ${log.getMessage()}");
   },
-      // 3. STATISTICS CALLBACK (THE SLIDING WINDOW + THROTTLE MAGIC)
+      // STATISTICS CALLBACK (THE SLIDING WINDOW + THROTTLE MAGIC)
       (statistics) {
     try {
       // 🟢 THROTTLE FIX: Har 1 second mein sirf ek dafa andar aane do
@@ -88,33 +105,32 @@ Future startFFmpegStream(
         double mbps = rawBitrate / 1000.0;
         double roundedMbps = double.parse(mbps.toStringAsFixed(1));
 
-        // 1. Time counter barhayein (Local Variable use kiya, faster hai)
+        // Time counter barhayein
         _localSecondsCounter += 1;
         int currentSec = _localSecondsCounter;
 
-        // 2. Format banayein (e.g., 61s -> "1m1s")
+        // Format banayein (e.g., 61s -> "1m1s")
         String timeLabel = "";
         if (currentSec < 60) {
           timeLabel = "${currentSec}s";
         } else {
-          int m = currentSec ~/ 60; // Minutes nikalne ke liye
-          int s = currentSec % 60; // Baqi bache seconds
+          int m = currentSec ~/ 60;
+          int s = currentSec % 60;
           timeLabel = "${m}m${s}s";
         }
 
-        // 🟢 Ek hi list step mein merge karein (Claude Optimization)
         final history = List<double>.from(FFAppState().bitrateHistory)
           ..add(roundedMbps);
         final labels = List<String>.from(FFAppState().bitrateLabels)
           ..add(timeLabel);
 
-        // 4. Sirf aakhri 5 items rakhein (Sliding Window)
+        // Sirf aakhri 5 items rakhein (Sliding Window)
         if (history.length > 5) {
           history.removeAt(0);
           labels.removeAt(0);
         }
 
-        // 🌟 THE LABEL FIX: X-Data ko aage mat bhagao, hamesha lock rakho (0, 1, 2... 9)
+        // X-Data ko aage mat bhagao, hamesha lock rakho
         final xData = List<int>.generate(history.length, (index) => index);
 
         // Ek sath App State update karein
