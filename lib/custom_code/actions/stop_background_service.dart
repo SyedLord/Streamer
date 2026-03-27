@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'package:flutter_background/flutter_background.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
@@ -16,18 +19,15 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> stopBackgroundService() async {
   try {
-    // FFmpeg band karo
     await FFmpegKit.cancel();
 
-    // Notification dismiss karo
+    // ✅ Ongoing notification dismiss karo
     await flutterLocalNotificationsPlugin.cancel(888);
 
-    // Foreground service band karo
     if (FlutterBackground.isBackgroundExecutionEnabled) {
       await FlutterBackground.disableBackgroundExecution();
     }
 
-    // App State reset karo
     FFAppState().update(() {
       FFAppState().liveBitrate = 0.0;
       FFAppState().streamSecondsCounter = 0;
@@ -36,7 +36,6 @@ Future<void> stopBackgroundService() async {
       FFAppState().bitrateXData = [0];
       FFAppState().currentVideoId = '';
       FFAppState().currentStreamId = '';
-      FFAppState().isStreamLive = false;
     });
 
     print("✅ Stream stopped, notification dismissed.");

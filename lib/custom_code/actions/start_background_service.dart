@@ -21,7 +21,7 @@ Future<bool> startBackgroundService(String streamTitle) async {
     // ─── STEP 1: Foreground service start karo ────────────────────────────
     final androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: "🔴 Live: $finalTitle",
-      notificationText: "Streaming to YouTube...",
+      notificationText: "Tap here to open app and manage stream.",
       notificationImportance: AndroidNotificationImportance.high,
       notificationIcon: AndroidResource(
         name: 'ic_launcher',
@@ -42,26 +42,18 @@ Future<bool> startBackgroundService(String streamTitle) async {
       return false;
     }
 
-    // ─── STEP 2: Notification initialize karo ─────────────────────────────
+    // ─── STEP 2: Ongoing notification — swipe se clear nahi hogi ──────────
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(android: androidSettings),
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        if (response.actionId == 'stop_stream') {
-          print("User ne notification se stream stop kiya.");
-          // stopBackgroundService action call hoga
-          await stopBackgroundService();
-        }
-      },
     );
 
-    // ─── STEP 3: Stop button wali notification show karo ──────────────────
     await flutterLocalNotificationsPlugin.show(
       888,
       '🔴 Live: $finalTitle',
-      'Streaming to YouTube...',
+      'Tap here to open app and manage stream.',
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'stream_channel',
@@ -69,21 +61,14 @@ Future<bool> startBackgroundService(String streamTitle) async {
           channelDescription: 'Controls for your live stream',
           importance: Importance.high,
           priority: Priority.high,
-          ongoing: true,
-          autoCancel: false,
-          actions: [
-            AndroidNotificationAction(
-              'stop_stream',
-              '⏹ Stop Stream',
-              cancelNotification: true,
-              showsUserInterface: false,
-            ),
-          ],
+          ongoing: true, // ✅ Swipe se clear nahi hogi
+          autoCancel: false, // ✅ Tap se bhi clear nahi hogi
+          // Koi action button nahi abhi
         ),
       ),
     );
 
-    print("✅ Notification with Stop button active.");
+    print("✅ Background service + ongoing notification active.");
     return true;
   } catch (e) {
     print("Background Service Error: $e");
