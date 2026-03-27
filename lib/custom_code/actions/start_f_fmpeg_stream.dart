@@ -36,10 +36,13 @@ Future startFFmpegStream(
     print("SAF translated path: $inputPath");
   }
 
+  // 🌟 THE FIX: Hardware Encoder (h264_mediacodec)
+  // Yeh background mein frame drop nahi hone dega
   String command = "-re -i \"$inputPath\" "
-      "-c:v libx264 -preset ultrafast "
-      "-b:v 6800k -maxrate 6800k -bufsize 13600k "
-      "-g 60 -c:a aac -b:a 128k -ar 44100 "
+      "-c:v h264_mediacodec "
+      "-b:v 6800k "
+      "-g 60 "
+      "-c:a aac -b:a 128k -ar 44100 "
       "-f flv \"$fullRtmpUrl\"";
 
   print("Starting stream: $command");
