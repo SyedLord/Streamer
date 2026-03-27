@@ -881,18 +881,28 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
                     padding: EdgeInsets.all(24.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await actions.stopFFmpegStream();
-                        await actions.manageLiveDashboard(
-                          'STOP',
-                          '',
-                          '',
-                          '',
+                        _model.stopBroadcast = await actions.showNativeDialog(
+                          'Are you sure?',
+                          'Do you want to stop live broadcast ?',
+                          'Yes',
+                          'No',
                         );
-                        FFAppState().isStreamLive = false;
-                        safeSetState(() {});
-                        await actions.stopBackgroundService();
+                        if (_model.stopBroadcast == true) {
+                          await actions.stopFFmpegStream();
+                          await actions.manageLiveDashboard(
+                            'STOP',
+                            '',
+                            '',
+                            '',
+                          );
+                          FFAppState().isStreamLive = false;
+                          safeSetState(() {});
+                          await actions.stopBackgroundService();
 
-                        context.goNamed(CreatorStudioHubWidget.routeName);
+                          context.goNamed(CreatorStudioHubWidget.routeName);
+                        }
+
+                        safeSetState(() {});
                       },
                       text: 'STOP STREAMING',
                       icon: Icon(
