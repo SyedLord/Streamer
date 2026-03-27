@@ -50,9 +50,9 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
           if (FFAppState().isStreamLive == false) {
             context.goNamed(CreatorStudioHubWidget.routeName);
 
-            await actions.showModernToast(
-              context,
-              'Livestreaming has been completed.',
+            await actions.showNativeToast(
+              'Livestream has been completed !',
+              true,
             );
           }
         },

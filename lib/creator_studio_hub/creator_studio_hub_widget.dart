@@ -8,7 +8,6 @@ import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -34,14 +33,6 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CreatorStudioHubModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await actions.showNativeToast(
-        'This is testing Ali Bhai',
-        true,
-      );
-    });
 
     _model.videoTitleTextController ??= TextEditingController();
     _model.videoTitleFocusNode ??= FocusNode();
@@ -1449,23 +1440,39 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   safeSetState(() {
                                     _model.videoTitleTextController?.clear();
                                   });
+                                  safeSetState(() {
+                                    _model.privacyValueController?.reset();
+                                    _model.privacyValue = null;
+                                  });
 
                                   context.pushNamed(
                                       LiveBroadcastModeWidget.routeName);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Stream Key not Generated!',
-                                        style: TextStyle(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                        ),
-                                      ),
-                                      duration: Duration(milliseconds: 4000),
-                                      backgroundColor:
-                                          FlutterFlowTheme.of(context).error,
-                                    ),
+                                  await actions.showNativeToast(
+                                    () {
+                                      if (getJsonField(
+                                            _model.generatedKey,
+                                            r'''$.streamKey''',
+                                          ) ==
+                                          null) {
+                                        return 'Stream Key is not generated !';
+                                      } else if (getJsonField(
+                                            _model.generatedKey,
+                                            r'''$.videoId''',
+                                          ) ==
+                                          null) {
+                                        return 'Video ID is not generated !';
+                                      } else if (getJsonField(
+                                            _model.generatedKey,
+                                            r'''$.streamId''',
+                                          ) ==
+                                          null) {
+                                        return 'Stream ID is not generated !';
+                                      } else {
+                                        return '';
+                                      }
+                                    }(),
+                                    true,
                                   );
                                   FFAppState().isStreamLive = false;
                                   safeSetState(() {});
