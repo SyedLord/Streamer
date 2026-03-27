@@ -14,3 +14,4 @@ export 'stop_background_service.dart' show stopBackgroundService;
 export 'show_native_dialog.dart' show showNativeDialog;
 export 'show_native_alert.dart' show showNativeAlert;
 export 'show_modern_toast.dart' show showModernToast;
+export 'show_native_toast.dart' show showNativeToast;
