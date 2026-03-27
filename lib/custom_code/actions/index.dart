@@ -11,3 +11,5 @@ export 'fetch_live_stream_stats.dart' show fetchLiveStreamStats;
 export 'manage_live_dashboard.dart' show manageLiveDashboard;
 export 'start_background_service.dart' show startBackgroundService;
 export 'stop_background_service.dart' show stopBackgroundService;
+export 'show_native_dialog.dart' show showNativeDialog;
+export 'show_native_alert.dart' show showNativeAlert;

@@ -36,12 +36,22 @@ class _LiveBroadcastModeWidgetState extends State<LiveBroadcastModeWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await actions.manageLiveDashboard(
-        'START',
-        FFAppState().youtubeAccessToken,
-        FFAppState().currentVideoId,
-        FFAppState().currentStreamId,
-      );
+      if (FFAppState().isStreamLive == true) {
+        await actions.manageLiveDashboard(
+          'START',
+          FFAppState().youtubeAccessToken,
+          FFAppState().currentVideoId,
+          FFAppState().currentStreamId,
+        );
+      } else {
+        context.goNamed(CreatorStudioHubWidget.routeName);
+
+        await actions.showNativeAlert(
+          'Broadcast Ended',
+          'Livestream has been Ended.',
+          'Ok',
+        );
+      }
     });
   }
 

@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:webviewx_plus/webviewx_plus.dart';
 import 'creator_studio_hub_model.dart';
 export 'creator_studio_hub_model.dart';
 
@@ -1385,24 +1384,10 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                         FFButtonWidget(
                           onPressed: () async {
                             if (FFAppState().isStreamLive == true) {
-                              await showDialog(
-                                context: context,
-                                builder: (alertDialogContext) {
-                                  return WebViewAware(
-                                    child: AlertDialog(
-                                      title: Text('Alert !'),
-                                      content: Text(
-                                          'A livestream is currently ongoing. Stop it to continue.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(alertDialogContext),
-                                          child: Text('Ok'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                              await actions.showNativeAlert(
+                                'Stream in Progress',
+                                'You are already broadcasting a live stream. Please stop the current stream before starting a new one.',
+                                'Got it',
                               );
                             } else {
                               if (FFAppState().selectedVideoPath != '') {
