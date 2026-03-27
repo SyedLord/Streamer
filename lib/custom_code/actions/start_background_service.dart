@@ -8,68 +8,33 @@ import 'package:flutter/material.dart';
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:flutter_background/flutter_background.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:permission_handler/permission_handler.dart'; // Battery bypass ke liye
 
 Future<bool> startBackgroundService(String streamTitle) async {
   try {
+    // 🌟 1. Battery Optimization Bypass (App ka gala ghontne se roke)
+    if (await Permission.ignoreBatteryOptimizations.isDenied) {
+      await Permission.ignoreBatteryOptimizations.request();
+    }
+
     String finalTitle =
         streamTitle.isNotEmpty ? streamTitle : "SyedLord Gaming Live";
 
-    // ─── STEP 1: Foreground service start karo ────────────────────────────
+    // 🌟 2. Sirf EK Clean Notification (Foreground Service wali)
     final androidConfig = FlutterBackgroundAndroidConfig(
       notificationTitle: "🔴 Live: $finalTitle",
-      notificationText: "Tap here to open app and manage stream.",
-      notificationImportance: AndroidNotificationImportance.high,
-      notificationIcon: AndroidResource(
-        name: 'ic_launcher',
-        defType: 'mipmap',
-      ),
+      notificationText: "Tap here to open app and stop stream.",
+      notificationImportance: AndroidNotificationImportance.normal,
+      notificationIcon: AndroidResource(name: 'ic_launcher', defType: 'mipmap'),
     );
 
     bool initialized =
         await FlutterBackground.initialize(androidConfig: androidConfig);
-    if (!initialized) {
-      print("Background service initialize nahi hua.");
-      return false;
+
+    if (initialized) {
+      return await FlutterBackground.enableBackgroundExecution();
     }
-
-    bool enabled = await FlutterBackground.enableBackgroundExecution();
-    if (!enabled) {
-      print("Background service enable nahi hua.");
-      return false;
-    }
-
-    // ─── STEP 2: Ongoing notification — swipe se clear nahi hogi ──────────
-    const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(android: androidSettings),
-    );
-
-    await flutterLocalNotificationsPlugin.show(
-      888,
-      '🔴 Live: $finalTitle',
-      'Tap here to open app and manage stream.',
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'stream_channel',
-          'Live Stream Controls',
-          channelDescription: 'Controls for your live stream',
-          importance: Importance.high,
-          priority: Priority.high,
-          ongoing: true, // ✅ Swipe se clear nahi hogi
-          autoCancel: false, // ✅ Tap se bhi clear nahi hogi
-          // Koi action button nahi abhi
-        ),
-      ),
-    );
-
-    print("✅ Background service + ongoing notification active.");
-    return true;
+    return false;
   } catch (e) {
     print("Background Service Error: $e");
     return false;
