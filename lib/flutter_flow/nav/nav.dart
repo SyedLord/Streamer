@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 import '/index.dart';
@@ -36,10 +37,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       errorBuilder: (context, state) => appStateNotifier.showSplashImage
           ? Builder(
               builder: (context) => Container(
-                color: Colors.transparent,
-                child: Image.asset(
-                  'assets/images/1773697695016.png',
-                  fit: BoxFit.fitHeight,
+                color: FlutterFlowTheme.of(context).primaryBackground,
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: 200.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             )
@@ -51,10 +55,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, _) => appStateNotifier.showSplashImage
               ? Builder(
                   builder: (context) => Container(
-                    color: Colors.transparent,
-                    child: Image.asset(
-                      'assets/images/1773697695016.png',
-                      fit: BoxFit.fitHeight,
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: 200.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 )
