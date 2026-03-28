@@ -25,7 +25,8 @@ Future<bool> startBackgroundService(String streamTitle) async {
       notificationTitle: "🔴 Live: $finalTitle",
       notificationText: "Tap here to open app and stop stream.",
       notificationImportance: AndroidNotificationImportance.normal,
-      notificationIcon: AndroidResource(name: 'ic_launcher', defType: 'mipmap'),
+      notificationIcon:
+          AndroidResource(name: 'ic_launcher_foreground', defType: 'drawable'),
     );
 
     bool initialized =
