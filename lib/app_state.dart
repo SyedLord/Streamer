@@ -35,6 +35,14 @@ class FFAppState extends ChangeNotifier {
     _safeInit(() {
       _channelName = prefs.getString('ff_channelName') ?? _channelName;
     });
+    _safeInit(() {
+      _youtubeAccessToken =
+          prefs.getString('ff_youtubeAccessToken') ?? _youtubeAccessToken;
+    });
+    _safeInit(() {
+      _youtubeRefreshToken =
+          prefs.getString('ff_youtubeRefreshToken') ?? _youtubeRefreshToken;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -96,6 +104,7 @@ class FFAppState extends ChangeNotifier {
   String get youtubeAccessToken => _youtubeAccessToken;
   set youtubeAccessToken(String value) {
     _youtubeAccessToken = value;
+    prefs.setString('ff_youtubeAccessToken', value);
   }
 
   String _liveTime = '00:00:00';
@@ -231,6 +240,13 @@ class FFAppState extends ChangeNotifier {
   bool get isStreamLive => _isStreamLive;
   set isStreamLive(bool value) {
     _isStreamLive = value;
+  }
+
+  String _youtubeRefreshToken = '';
+  String get youtubeRefreshToken => _youtubeRefreshToken;
+  set youtubeRefreshToken(String value) {
+    _youtubeRefreshToken = value;
+    prefs.setString('ff_youtubeRefreshToken', value);
   }
 }
 

@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 class LoginScreenModel extends FlutterFlowModel<LoginScreenWidget> {
   ///  State fields for stateful widgets in this page.
 
-  // Stores action output result for [Custom Action - webGoogleLogin] action in Button widget.
-  String? myToken;
-  // Stores action output result for [Backend Call - API (Get YouTube Stream Data)] action in Button widget.
-  ApiCallResponse? apiResult;
-  // Stores action output result for [Backend Call - API (Get YouTube Channel Info)] action in Button widget.
-  ApiCallResponse? channelApiResult;
+  // Stores action output result for [Custom Action - webGoogleLogin] action in LoginBtn widget.
+  dynamic loginJsonOutput;
+  // Stores action output result for [Backend Call - API (Get YouTube Stream Data)] action in LoginBtn widget.
+  ApiCallResponse? apiStreamResult;
+  // Stores action output result for [Backend Call - API (Get YouTube Channel Info)] action in LoginBtn widget.
+  ApiCallResponse? apiChannelResult;
 
   @override
   void initState(BuildContext context) {}

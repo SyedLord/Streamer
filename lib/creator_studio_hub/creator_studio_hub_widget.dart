@@ -1392,90 +1392,110 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                               );
                             } else {
                               if (FFAppState().selectedVideoPath != '') {
-                                _model.generatedKey =
-                                    await actions.setupYouTubeLiveEvent(
-                                  FFAppState().youtubeAccessToken,
-                                  _model.videoTitleTextController.text,
-                                  _model.privacyValue,
-                                  _model.categoryValue,
-                                  _model.localThumbnailPath,
+                                _model.freshToken =
+                                    await actions.refreshGoogleToken(
+                                  FFAppState().youtubeRefreshToken,
                                 );
-                                if (_model.generatedKey != null) {
-                                  await Future.delayed(
-                                    Duration(
-                                      milliseconds: 5000,
-                                    ),
-                                  );
-                                  _model.foreground =
-                                      await actions.startBackgroundService(
+                                if (_model.freshToken != null &&
+                                    _model.freshToken != '') {
+                                  FFAppState().youtubeAccessToken =
+                                      _model.freshToken!;
+                                  safeSetState(() {});
+                                  _model.generatedKey =
+                                      await actions.setupYouTubeLiveEvent(
+                                    FFAppState().youtubeAccessToken,
                                     _model.videoTitleTextController.text,
+                                    _model.privacyValue,
+                                    _model.categoryValue,
+                                    _model.localThumbnailPath,
                                   );
-                                  await actions.startFFmpegStream(
-                                    FFAppState().selectedVideoPath,
-                                    FFAppState().globalRtmp,
-                                    getJsonField(
+                                  if (_model.generatedKey != null) {
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 5000,
+                                      ),
+                                    );
+                                    _model.foreground =
+                                        await actions.startBackgroundService(
+                                      _model.videoTitleTextController.text,
+                                    );
+                                    await actions.startFFmpegStream(
+                                      FFAppState().selectedVideoPath,
+                                      FFAppState().globalRtmp,
+                                      getJsonField(
+                                        _model.generatedKey,
+                                        r'''$.streamKey''',
+                                      ).toString(),
+                                    );
+                                    FFAppState().currentVideoId = getJsonField(
                                       _model.generatedKey,
-                                      r'''$.streamKey''',
-                                    ).toString(),
-                                  );
-                                  FFAppState().currentVideoId = getJsonField(
-                                    _model.generatedKey,
-                                    r'''$.videoId''',
-                                  ).toString();
-                                  FFAppState().currentStreamId = getJsonField(
-                                    _model.generatedKey,
-                                    r'''$.streamId''',
-                                  ).toString();
-                                  FFAppState().isStreamLive = true;
-                                  safeSetState(() {});
-                                  await Future.delayed(
-                                    Duration(
-                                      milliseconds: 200,
-                                    ),
-                                  );
-                                  _model.localThumbnailPath = '';
-                                  safeSetState(() {});
-                                  FFAppState().selectedVideoPath = '';
-                                  safeSetState(() {});
-                                  safeSetState(() {
-                                    _model.videoTitleTextController?.clear();
-                                  });
-                                  safeSetState(() {
-                                    _model.privacyValueController?.reset();
-                                    _model.privacyValue = null;
-                                  });
+                                      r'''$.videoId''',
+                                    ).toString();
+                                    FFAppState().currentStreamId = getJsonField(
+                                      _model.generatedKey,
+                                      r'''$.streamId''',
+                                    ).toString();
+                                    FFAppState().isStreamLive = true;
+                                    safeSetState(() {});
+                                    await Future.delayed(
+                                      Duration(
+                                        milliseconds: 200,
+                                      ),
+                                    );
+                                    _model.localThumbnailPath = '';
+                                    safeSetState(() {});
+                                    FFAppState().selectedVideoPath = '';
+                                    safeSetState(() {});
+                                    safeSetState(() {
+                                      _model.videoTitleTextController?.clear();
+                                    });
+                                    safeSetState(() {
+                                      _model.privacyValueController?.reset();
+                                      _model.privacyValue = null;
+                                    });
 
-                                  context.pushNamed(
-                                      LiveBroadcastModeWidget.routeName);
+                                    context.pushNamed(
+                                        LiveBroadcastModeWidget.routeName);
+                                  } else {
+                                    await actions.showNativeToast(
+                                      () {
+                                        if (getJsonField(
+                                              _model.generatedKey,
+                                              r'''$.streamKey''',
+                                            ) ==
+                                            null) {
+                                          return 'Stream Key is not generated !';
+                                        } else if (getJsonField(
+                                              _model.generatedKey,
+                                              r'''$.videoId''',
+                                            ) ==
+                                            null) {
+                                          return 'Video ID is not generated !';
+                                        } else if (getJsonField(
+                                              _model.generatedKey,
+                                              r'''$.streamId''',
+                                            ) ==
+                                            null) {
+                                          return 'Stream ID is not generated !';
+                                        } else {
+                                          return '';
+                                        }
+                                      }(),
+                                      true,
+                                    );
+                                    FFAppState().isStreamLive = false;
+                                    safeSetState(() {});
+                                  }
                                 } else {
-                                  await actions.showNativeToast(
-                                    () {
-                                      if (getJsonField(
-                                            _model.generatedKey,
-                                            r'''$.streamKey''',
-                                          ) ==
-                                          null) {
-                                        return 'Stream Key is not generated !';
-                                      } else if (getJsonField(
-                                            _model.generatedKey,
-                                            r'''$.videoId''',
-                                          ) ==
-                                          null) {
-                                        return 'Video ID is not generated !';
-                                      } else if (getJsonField(
-                                            _model.generatedKey,
-                                            r'''$.streamId''',
-                                          ) ==
-                                          null) {
-                                        return 'Stream ID is not generated !';
-                                      } else {
-                                        return '';
-                                      }
-                                    }(),
-                                    true,
+                                  await actions.showNativeAlert(
+                                    'Session Expired',
+                                    'Session Expired. Please log in again.',
+                                    'Ok',
                                   );
-                                  FFAppState().isStreamLive = false;
+                                  FFAppState().isLoggedIn = false;
                                   safeSetState(() {});
+
+                                  context.goNamed(LoginScreenWidget.routeName);
                                 }
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(

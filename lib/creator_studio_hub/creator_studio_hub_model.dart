@@ -27,6 +27,8 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   // State field(s) for Category widget.
   String? categoryValue;
   FormFieldController<String>? categoryValueController;
+  // Stores action output result for [Custom Action - refreshGoogleToken] action in Button widget.
+  String? freshToken;
   // Stores action output result for [Custom Action - setupYouTubeLiveEvent] action in Button widget.
   dynamic generatedKey;
   // Stores action output result for [Custom Action - startBackgroundService] action in Button widget.

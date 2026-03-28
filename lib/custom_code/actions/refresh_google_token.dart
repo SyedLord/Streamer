@@ -9,40 +9,31 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_appauth/flutter_appauth.dart';
 
-Future<dynamic> webGoogleLogin() async {
-  final FlutterAppAuth appAuth = FlutterAppAuth();
+Future<String?> refreshGoogleToken(String savedRefreshToken) async {
+  if (savedRefreshToken.isEmpty) return null;
 
+  final FlutterAppAuth appAuth = FlutterAppAuth();
   final String clientId =
       '317407113056-18bu1c6uolr8jd8rmehrmv48tdg9fmea.apps.googleusercontent.com';
   final String redirectUrl = 'com.syedlord.streamer:/oauth2redirect';
 
   try {
-    final AuthorizationTokenResponse? result =
-        await appAuth.authorizeAndExchangeCode(
-      AuthorizationTokenRequest(
+    // 🌟 Bina kisi popup ke, Google ko refresh token bhejo aur naya access token lo
+    final TokenResponse? result = await appAuth.token(
+      TokenRequest(
         clientId,
         redirectUrl,
+        refreshToken: savedRefreshToken,
         issuer: 'https://accounts.google.com',
-        scopes: ['email', 'profile', 'https://www.googleapis.com/auth/youtube'],
-        promptValues: [
-          'consent',
-          'select_account'
-        ], // 🌟 'consent' zaroori hai refresh token ke liye
-        additionalParameters: {
-          'access_type': 'offline'
-        }, // 🌟 YEH HAI ASAL JADOO (Refresh token mangne ke liye)
       ),
     );
 
-    if (result != null) {
-      // Dono tokens JSON ki shakal mein return karein
-      return {
-        "accessToken": result.accessToken,
-        "refreshToken": result.refreshToken
-      };
+    if (result != null && result.accessToken != null) {
+      print("Token Refreshed Successfully!");
+      return result.accessToken; // Yeh raha aapka bilkul fresh token
     }
   } catch (e) {
-    print("Web Login Error: $e");
+    print("Silent Refresh Error: $e");
     return null;
   }
   return null;

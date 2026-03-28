@@ -230,52 +230,60 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () async {
-                            _model.myToken = await actions.webGoogleLogin();
-                            _model.apiResult =
-                                await GetYouTubeStreamDataCall.call(
-                              accessToken: _model.myToken,
-                            );
-
-                            if ((_model.apiResult?.succeeded ?? true)) {
-                              _model.channelApiResult =
-                                  await GetYouTubeChannelInfoCall.call(
-                                accessToken: _model.myToken,
-                              );
-
-                              FFAppState().globalRtmp =
-                                  GetYouTubeStreamDataCall.rtmpUrl(
-                                (_model.apiResult?.jsonBody ?? ''),
+                            _model.loginJsonOutput =
+                                await actions.webGoogleLogin();
+                            if (_model.loginJsonOutput != null) {
+                              FFAppState().youtubeAccessToken = getJsonField(
+                                _model.loginJsonOutput,
+                                r'''$.accessToken''',
                               ).toString();
-                              FFAppState().globalStreamKey =
-                                  GetYouTubeStreamDataCall.streamKey(
-                                (_model.apiResult?.jsonBody ?? ''),
+                              FFAppState().youtubeRefreshToken = getJsonField(
+                                _model.loginJsonOutput,
+                                r'''$.refreshToken''',
                               ).toString();
-                              FFAppState().isLoggedIn = true;
-                              FFAppState().channelName = valueOrDefault<String>(
-                                GetYouTubeChannelInfoCall.channelTitle(
-                                  (_model.channelApiResult?.jsonBody ?? ''),
-                                ).toString(),
-                                'Default',
-                              );
-                              FFAppState().youtubeAccessToken = _model.myToken!;
                               safeSetState(() {});
+                              _model.apiStreamResult =
+                                  await GetYouTubeStreamDataCall.call(
+                                accessToken: FFAppState().youtubeAccessToken,
+                              );
 
-                              context.goNamed(CreatorStudioHubWidget.routeName);
+                              if ((_model.apiStreamResult?.succeeded ?? true)) {
+                                _model.apiChannelResult =
+                                    await GetYouTubeChannelInfoCall.call(
+                                  accessToken: FFAppState().youtubeAccessToken,
+                                );
+
+                                if ((_model.apiChannelResult?.succeeded ??
+                                    true)) {
+                                  FFAppState().channelName =
+                                      GetYouTubeChannelInfoCall.channelTitle(
+                                    (_model.apiChannelResult?.jsonBody ?? ''),
+                                  ).toString();
+                                  FFAppState().isLoggedIn = true;
+                                  FFAppState().globalRtmp =
+                                      GetYouTubeStreamDataCall.rtmpUrl(
+                                    (_model.apiStreamResult?.jsonBody ?? ''),
+                                  ).toString();
+                                  safeSetState(() {});
+
+                                  context.goNamed(
+                                      CreatorStudioHubWidget.routeName);
+                                } else {
+                                  await actions.showNativeToast(
+                                    'Failed to retrieve Channel Info',
+                                    true,
+                                  );
+                                }
+                              } else {
+                                await actions.showNativeToast(
+                                  'Failed to fetch stream data.',
+                                  true,
+                                );
+                              }
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Something Went Wrong',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  duration: Duration(milliseconds: 4000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).error,
-                                ),
+                              await actions.showNativeToast(
+                                'Login Failed !',
+                                true,
                               );
                             }
 
