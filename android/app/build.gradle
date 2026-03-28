@@ -74,9 +74,8 @@ android {
         release {
             signingConfig signingConfigs.debug
             
-            // ✅ R8 minification band — Method Channels crash nahi karenge
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
