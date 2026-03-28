@@ -4,8 +4,10 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
+import '/flutter_flow/admob_util.dart' as admob;
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -1398,6 +1400,15 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                 );
                                 if (_model.freshToken != null &&
                                     _model.freshToken != '') {
+                                  unawaited(
+                                    () async {
+                                      admob.loadInterstitialAd(
+                                        "",
+                                        "ca-app-pub-3940256099942544/1033173712",
+                                        true,
+                                      );
+                                    }(),
+                                  );
                                   FFAppState().youtubeAccessToken =
                                       _model.freshToken!;
                                   safeSetState(() {});
@@ -1452,7 +1463,12 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                     safeSetState(() {
                                       _model.privacyValueController?.reset();
                                       _model.privacyValue = null;
+                                      _model.categoryValueController?.reset();
+                                      _model.categoryValue = null;
                                     });
+
+                                    _model.interstitialAdSuccess =
+                                        await admob.showInterstitialAd();
 
                                     context.pushNamed(
                                         LiveBroadcastModeWidget.routeName);

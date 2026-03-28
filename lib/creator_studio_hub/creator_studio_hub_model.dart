@@ -33,6 +33,8 @@ class CreatorStudioHubModel extends FlutterFlowModel<CreatorStudioHubWidget> {
   dynamic generatedKey;
   // Stores action output result for [Custom Action - startBackgroundService] action in Button widget.
   bool? foreground;
+  // Stores action output result for [AdMob - Show Interstitial Ad] action in Button widget.
+  bool? interstitialAdSuccess;
 
   @override
   void initState(BuildContext context) {}
