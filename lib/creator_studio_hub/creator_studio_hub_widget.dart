@@ -1514,19 +1514,9 @@ class _CreatorStudioHubWidgetState extends State<CreatorStudioHubWidget> {
                                   context.goNamed(LoginScreenWidget.routeName);
                                 }
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Select the Video !',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).error,
-                                  ),
+                                await actions.showNativeToast(
+                                  'Select the Video !',
+                                  true,
                                 );
                               }
                             }
